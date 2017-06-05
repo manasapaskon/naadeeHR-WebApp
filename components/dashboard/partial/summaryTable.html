@@ -1,0 +1,569 @@
+	<!-- <script  type="text/ng-template" id="activitySummaryTable"> -->
+		<style type="text/css">
+			tr:nth-child(odd) { background: #fafbfd;}.
+			._md-container{
+			      display: inline-block;
+			    }
+			._md-container {
+			    display: -webkit-inline-box;
+			}
+			.btn {
+			    padding: 4px;
+			    font-size: 12px;
+			}
+			.btn-primary {
+			    color: #797979;
+			    background-color: #efefef;
+			    border-color: transparent;
+			}
+			.btn-primary.active, .btn-primary:active, .open>.dropdown-toggle.btn-primary {
+			    color: #fff;
+			    background-color: #43adde;
+			    border-color: transparent;
+			    box-shadow: none;
+			}
+			.btn-primary.hover, .btn-primary:hover, .open>.dropdown-toggle.btn-primary {
+			    color: #797979;
+			    background-color: #efefef;
+			    border-color: transparent;
+			}
+			.btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover, .open>.dropdown-toggle.btn-primary.focus, .open>.dropdown-toggle.btn-primary:focus, .open>.dropdown-toggle.btn-primary:hover {
+			    color: #fff;
+			    background-color: #43adde;
+			    border-color: transparent;
+			}
+			.btn-group, .btn-group-vertical {
+			    position: relative;
+			    display: inherit !important;
+			}
+			md-input-container.md-input-has-value {
+			    margin: 4px;
+			    max-width: 400px !important;
+
+			}
+			md-select {
+			    margin: 0 6px;
+			    display: -moz-deck;
+			    max-width: 400px !important;
+			    min-width: 120px;
+			}
+		</style>
+		<div class="col-sm-12 tileTitleBar" style="width: 100%">
+			<!-- <img src="assets/img/info.png" style="float: left;padding-right: 10px;"  > -->	
+			<div>
+				<div id="valign">
+					<i style="background: rgba(103, 103, 103, 0.87);border-radius: 50%;color: white;margin-right: 5px;font-size: 20px;" class="material-icons valign" ng-disabled="$isFirst()" ng-click="$previousStep()">keyboard_arrow_left</i>
+					<span class="valign" style="border-right: 1px solid #bbb;padding-right: 15px;">Resource List </span> 
+					<i style="color: #43adde;padding-left: 6px;cursor: pointer;" date-range-picker class=" date-picker material-icons valign" ng-model="daterange.range" options="opts" required >today</i>
+					<div style="font-size: 14px;padding-top: 3px;padding-left: 1px;border-right: 1px solid #9e9e9e;
+    padding-right: 12px;" class="valign" >
+						{{changedStartDate}} - {{changedEndDate}}
+					</div>
+				</div>
+				<div class="valign" style="padding-left: 20px;">				        	
+					  <div class="row">
+					    <div>
+					      <md-chips-select ng-if="dataHasLoaded" ng-model="resFilterChip" select-items="resFilList" main-title="personnelFullName"></md-chips-select>
+					    </div>
+					  </div>
+		        </div>
+		       <div class="valign" >
+		       		<span ng-if="resChipFiltered.length==0" style="font-size: 15px;padding-left: 16px;">All Resources </span>	<span ng-if="resChipFiltered.length==1" style="font-size: 15px;padding-left: 16px;">{{resChipFiltered.length}} Resource </span>			        	
+					<span ng-if="resChipFiltered.length>1" style="font-size: 15px;padding-left: 16px;">{{resChipFiltered.length}} Resources </span>
+		       </div>
+
+				<div class="valign" style="float: right;">
+				<!-- ng-click="showPrompt($event, changedStartDate, changedEndDate)" -->
+					<div class="dropdown" style="width: 100%;">
+
+						<img src="assets/img/download.png" data-toggle="dropdown" class="valign" style=" padding-left: 8px;color: #43adde;cursor: pointer;" >
+
+						 <div class="dropdown-menu" style="padding-bottom: 0;" >
+						 <div style="">
+						 <div> </div>
+						 	<div class="repDateRange">
+						 		<i style="color: #8a8a8a;padding-right: 3px;cursor: pointer;" class=" date-picker material-icons valign" >today</i>
+						 		{{changedStartDate}} - {{changedEndDate}}
+						 	</div>
+						 	<div class="repRes">
+						 		<i style="color: #8a8a8a;padding-right: 3px;cursor: pointer;" class=" date-picker material-icons valign" >people</i>
+						 		<span ng-if="resChipFiltered.length>0">{{resChipFiltered.length}}</span>
+						 		<span ng-if="resChipFiltered.length==0">All</span>
+						 	</div>
+						 </div>
+
+						 	<div style="padding: 30px 10px 15px;    width: 280px;">
+				 		        <md-input-container>
+						          <label style="margin-bottom: 0">Select Report</label>
+						         <md-select ng-model="reportCat">
+						          <md-optgroup label="Expense">
+						          	<md-option value="timeEntryPeriodSubmission" selected><em style="font-size: 13px;">Time Entry Period Submission </em></md-option>
+						          	<md-option value="timeSheetApprovalActivity"><em style="font-size: 13px;">TimeSheet Approval Activity </em></md-option>
+
+						            <md-option value="expenseEntryPeriodSubmission"><em style="font-size: 13px;">Expense Entry Period Submission </em></md-option>
+						            <md-option value="expenseApprovalActivity"><em style="font-size: 13px;">Expense Approval Activity</em></md-option>
+						          </md-optgroup>
+						         </md-select>
+						        </md-input-container>
+								 
+								 <!-- View Type -->
+							     <div class="btn-group" style="width: 95%;margin: 0 auto;">
+							            <label style="width:49%">
+							            	<input type="button" value="Consolidated" class="btn btn-primary" ng-model="viewType" btn-radio="'Consolidated'" checked>
+							            </label>
+							            <label style="width:49%">
+							            	<input type="button" value="Detailed" class="btn btn-primary" ng-model="viewType" btn-radio="'Detailed'" >
+							            </label>
+
+										<!-- <label style="width:50%" class="btn btn-primary" ng-model="viewType" btn-radio="'Detailed'">Detail</label> -->
+							     </div>
+						     </div>
+						     <div ng-click="downloadReport(reportCat,viewType,'csv')" style="width: 100%;text-align: center; background: #4CAF50;padding: 5px;color: white;">
+						     	<span class="valign">Export as CSV</span>
+						     </div>
+						 </div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+		<table >
+		
+
+		<thead>
+			<tr style="background: #f7f7f7;">
+				<th class="dashthleft">Resources <img src="assets/img/sort.png"></th>
+				<th class="dashth" >Time & Expense</th>
+				<th class="dashth" >Invoice</th>
+				<!-- <th class="dashth" ><img src="assets/img/more.png"></th> -->
+				<th></th>
+			</tr>
+		</thead>
+		<tbody style="overflow: scroll;height: 65vh">
+
+			<tr ng-repeat="resName in ResNames.activitySummary | orderBy:'resName.personnel.personnelFullName' ">
+				<td style="font-size: 16px !important;">{{resName.personnel.personnelFullName}}</td>
+				<td style="text-align: right;padding: 3px;">
+					<div>
+						<div style="float: right;line-height: 20px;float: right;padding: 0 0 0 7px;">
+							<p class="verLine"></p>
+						</div>
+						<div style="float: right;line-height: 20px;min-width: 26.5%;">
+							<span style="font-size: 10px;color: #949494">Expense</span>
+							<p style="font-size: 16px;margin-bottom: 0px;color: #099581" class="ng-binding">
+							<md-tooltip md-direction="top">Approved Expense Amount</md-tooltip>
+							${{resName.expense.approvedExpenseAmt | number:2}}</p>
+
+							<p style="font-size: 12px;" class="ng-binding">
+							<md-tooltip md-direction="top">Submitted Expense Amount</md-tooltip>
+							${{resName.expense.submissionExpenseAmt | number:2}}</p>
+						</div>
+
+						<div style="float: right;line-height: 20px;float: right;margin-right: 12px;padding: 0 10px 0 7px;">
+							<p class="verLine"></p>
+						</div>
+
+						<div style="line-height: 20px;float: right;">
+									<span style="font-size: 10px;color: #949494">Time</span>
+									<p style="font-size: 16px;margin-bottom: 0px;color: #099581" class="ng-binding">
+									<md-tooltip md-direction="top">Approved Hours</md-tooltip>
+									{{resName.time.approvedHours | number:2}} Hrs</p>
+
+									<p style="font-size: 12px;margin-bottom: 0;">
+									<span style="color: #3276a2;font-weight: 500;" class="ng-binding">
+									<md-tooltip md-direction="top">Submitted Hours</md-tooltip>{{resName.time.submissionHours | number:2}}</span> 
+									<span class="ng-binding">/ <md-tooltip md-direction="top">Planned Hours</md-tooltip>{{resName.time.plannedHours | number:2}} Hrs</span></p>
+						</div>
+					</div>
+				</td>
+				<td style="text-align: right;padding: 3px;">
+					<div>
+						<div style="float: right;line-height: 20px;float: right;padding: 0 0 0 7px;">
+							<p class="verLine"></p>
+						</div>
+						<div style="float: right;line-height: 20px;min-width: 26.5%;">
+							<span style="font-size: 10px;color: #949494">Expense</span>
+							<p style="font-size: 16px;margin-bottom: 0px;color: #4f7c92" class="ng-binding">
+							<md-tooltip md-direction="top">Invoiced Expense Amount</md-tooltip>
+							${{resName.expense.invoicedExpenseAmt | number:2}}</p>
+
+<!-- 							<p style="font-size: 12px;" class="ng-binding">
+							${{resName.expense.submissionExpenseAmt | number:2}}</p> -->
+						</div>
+
+						<div style="float: right;line-height: 20px;float: right;margin-right: 12px;padding: 0 10px 0 7px;">
+							<p class="verLine"></p>
+						</div>
+
+						<div style="line-height: 20px;float: right;">
+									<span style="font-size: 10px;color: #949494">Time</span>
+									<p style="font-size: 16px;margin-bottom: 0px;color: #4f7c92" class="ng-binding">
+									<md-tooltip md-direction="top">Invoiced Hours Amount</md-tooltip>
+									${{resName.time.invoicedHoursAmt | number:2}}</p>
+
+									<p style="font-size: 12px;margin-bottom: 0;">
+									<span  class="ng-binding">
+									<md-tooltip md-direction="top">Invoiced Hours</md-tooltip>{{resName.time.invoicedHours | number:2}} Hrs</span> 
+									</p>
+						</div>
+					</div>
+
+				</td>
+
+				<td style="padding: 10px 10px;text-align: right;">
+					<fieldset ng-if="setArrowDisable(resName.time.submissionHours,resName.expense.submissionExpenseAmt)">
+						<i style="border-radius: 50%;color: #54617b;margin-right: 5px;font-size: 28px;" class="material-icons valign"  ng-disabled="$lastStep();"  ng-click="passResRef(resName);$nextStep();">keyboard_arrow_right</i>
+					</fieldset>
+					<fieldset ng-if="!setArrowDisable(resName.time.submissionHours,resName.expense.submissionExpenseAmt)" >
+						<i style="border-radius: 50%;color: #cecece;margin-right: 5px;font-size: 28px;" class="material-icons valign" ng-disabled="true"><md-tooltip>There are no submissions</md-tooltip>keyboard_arrow_right</i>
+					</fieldset>
+				</td>
+
+
+
+				<!-- Detailed Summary -->
+				<script type="text/ng-template" id="detailedSummaryTable">
+					<style type="text/css">
+						tbody.detailTbody:nth-child(even) {
+						   /* background: #fafbfd !important;*/
+						}
+					</style>
+					<md-content>
+						<div style="padding: 8px 18px;font-size: 20px;"">
+								<div class="flLeft">
+									<i style="background: rgba(103, 103, 103, 0.87);border-radius: 50%;color: white;margin-right: 5px;font-size: 20px;" class="material-icons valign" ng-disabled="$isFirst()" ng-click="$previousStep()">keyboard_arrow_left</i>{{totObj.personnel.personnelFullName}}
+								</div>
+
+								<div style="float: right;width:230px;text-align: right;">
+									<div class="inrSmryTitle">Invoice</div>
+									<div style="float: right;line-height: 20px;float: right;padding: 0 0 0 7px;">
+										<p class="verLine"></p>
+									</div>
+									<div style="float: right;line-height: 20px;min-width: 26.5%;">
+										<span style="font-size: 10px;color: #949494">Expense</span>
+										<p style="font-size: 16px;margin-bottom: 0px;color: #4f7c92" class="ng-binding">
+										<md-tooltip md-direction="top">Invoiced Expense Amount</md-tooltip>
+										${{totObj.expense.invoicedExpenseAmt | number:2}}</p>
+
+			<!-- 							<p style="font-size: 12px;" class="ng-binding">
+										${{resName.expense.submissionExpenseAmt | number:2}}</p> -->
+									</div>
+
+									<div style="float: right;line-height: 20px;float: right;margin-right: 12px;padding: 0 10px 0 7px;">
+										<p class="verLine"></p>
+									</div>
+
+									<div style="line-height: 20px;float: right;">
+												<span style="font-size: 10px;color: #949494">Time</span>
+												<p style="font-size: 16px;margin-bottom: 0px;color: #4f7c92" class="ng-binding">
+												<md-tooltip md-direction="top">Invoiced Hours Amount</md-tooltip>
+												${{totObj.time.invoicedHoursAmt | number:2}}</p>
+
+												<p style="font-size: 12px;margin-bottom: 0;">
+												<span  class="ng-binding">
+												<md-tooltip md-direction="top">Invoiced Hours</md-tooltip>{{totObj.time.invoicedHours | number:2}} Hrs</span> 
+												</p>
+									</div>
+								</div>	
+
+								<div style="float: right;width:230px;text-align: right;">
+									<div class="inrSmryTitle">Time & Expense</div>
+									<div style="float: right;line-height: 20px;float: right;padding: 0 0 0 7px;">
+										<p class="verLine"></p>
+									</div>
+									<div style="float: right;line-height: 20px;min-width: 26.5%;">
+										<span style="font-size: 10px;color: #949494">Expense</span>
+										<p style="font-size: 16px;margin-bottom: 0px;color: #099581" class="ng-binding">
+										<md-tooltip md-direction="top">Approved Expense Amount</md-tooltip>
+										${{totObj.expense.approvedExpenseAmt | number:2}}</p>
+
+										<p style="font-size: 12px;" class="ng-binding">
+										<md-tooltip md-direction="top">Submitted Expense Amount</md-tooltip>
+										${{totObj.expense.submissionExpenseAmt | number:2}}</p>
+									</div>
+
+									<div style="float: right;line-height: 20px;float: right;margin-right: 12px;padding: 0 10px 0 7px;">
+										<p class="verLine"></p>
+									</div>
+
+									<div style="line-height: 20px;float: right;">
+												<span style="font-size: 10px;color: #949494">Time</span>
+												<p style="font-size: 16px;margin-bottom: 0px;color: #099581" class="ng-binding">
+												<md-tooltip md-direction="top">Approved Hours</md-tooltip>
+												{{totObj.time.approvedHours | number:2}} Hrs</p>
+
+												<p style="font-size: 12px;margin-bottom: 0;">
+												<span style="color: #3276a2;font-weight: 500;" class="ng-binding">
+												<md-tooltip md-direction="top">Submitted Hours</md-tooltip>{{totObj.time.submissionHours | number:2}}</span> 
+												<span class="ng-binding">/ <md-tooltip md-direction="top">Planned Hours</md-tooltip>{{totObj.time.plannedHours | number:2}} Hrs</span></p>
+									</div>
+								</div>	
+
+					
+						</div>
+
+					</md-content>
+
+				  <md-content>
+				    <md-tabs md-dynamic-height="" md-border-bottom="">
+				      <md-tab label="Time">
+
+				        <md-content class="md-padding" st-safe-src="resObjTime" st-table="resObjTimeCopy" st-set-filter="customFilter" class="table table-striped">
+
+							<div class="filterContainer">
+							  <nav class="navbar navbar-default">
+							    <div class="collapse navbar-collapse js-navbar-collapse">
+							      <ul class="miniFilter nav navbar-nav">
+							        <li class="dropdown mega-dropdown">
+							          <a data-target="#" class="dropdown-toggle" data-toggle="dropdown"> Timesheet Filters <span class="glyphicon glyphicon-chevron-down pull-right"></span></a>
+
+							          <ul class="dropdown-menu mega-dropdown-menu row">
+							            <li class="col-sm-3">
+							              <ul>
+							                <li class="dropdown-header">Projects</li>
+							                	<st-select-multiple collection="resObjTime" predicate="projectName"></st-select-multiple>
+							              </ul>
+							            </li>
+							            <li class="col-sm-3">
+							              <ul>
+							                <li class="dropdown-header">Status</li>
+								  		  		<st-select-multiple collection="resObjTime" predicate="timesheetStatus"></st-select-multiple>
+							                <li class="divider"></li>
+							                <li class="dropdown-header">Invoice</li>
+								  		  		<st-select-multiple collection="resObjTime" predicate="isInvoiced"></st-select-multiple>
+							              </ul>
+							            </li>
+							            <li class="col-sm-5">
+							              <ul >
+							                <li class="dropdown-header">Activites</li>
+							                	<st-select-multiple collection="resObjTime" predicate="activityName"></st-select-multiple>
+							              </ul>
+							            </li>
+
+							          </ul>
+
+							        </li>
+							      </ul>
+
+							    </div>
+							    <!-- /.nav-collapse -->
+							  </nav>
+							</div>
+
+
+							<table >
+							    <thead>
+							        <tr>
+							            <th style="width: 88%;" st-sort="startDate">Reporting Cycle <img src="assets/img/sort.png"></th>
+							            <th style="width: 100%;" st-sort="projectName">Project <img src="assets/img/sort.png"></th>
+							            <th style="width: 100%;" st-sort="activityName">Activity <img src="assets/img/sort.png"></th>
+							            <th style="width: 60%;" st-sort="totalHourWorked">Hours <img src="assets/img/sort.png"></th>
+							            <th st-sort="timesheetStatus">Status <img src="assets/img/sort.png"></th>
+							            <th st-sort="isInvoiced">Invoice <img src="assets/img/sort.png"></th>
+
+							        </tr>
+							    </thead>
+							    <tbody collapsecall ng-repeat="(key,value) in resObjTimeCopy | groupBy: '[startDate,endDate]'" class="detailTbody">
+							        <tr  data-toggle="collapse" data-target="#demo{{$index}}" style="border-top: 1px solid #dcdcdc;cursor: pointer;" ng-if="row.timesheetStatus!='Saved'" >
+							            <td style="width: 88%;color: #54627d;font-weight: 500;" class="ellip">{{key.slice(0,10) | date : format : timezone}} - {{key.slice(22,32) | date : format : timezone}}</td>
+							            <td style="width: 100%;">
+							            	<span ng-repeat="proj in value | unique:'projectName' ">{{proj.projectName}}</span>
+							            </td>
+							            <td style="width: 100%;">
+							            	<span class="statusCountOne" ng-show="value.length==1" >{{value.length}} Activity</span>
+							            	<span class="statusCount" ng-show="value.length>1" >{{value.length}} Activities</span>
+							            </td>
+							            <td style="width: 60%;color: #54627d;font-weight: 600;">{{totHours(value)  | number:2}} Hrs
+							            <span ></span></td>
+							            <td > 
+							            {{getStatus(value)}}
+							            	<div>
+							            		<span class="stCountInProgress" >{{inPCount}}</span>
+							            		<span class="stCountAppr">{{appCount}}</span>
+							            		<span class="stCountRej" >{{rejCount}}</span>
+							            	</div>
+							            </td>
+							            <td >
+							            	<span><a data-target="#">{{value.invoicedNumber}}</a>
+							            	<i data-toggle="collapse" data-target="#demo{{$index}}" style="float: right" class="accordion-toggle material-icons">keyboard_arrow_down</i></span>
+							            </td>
+							        </tr>
+							        <tr>
+							        	<td style="padding: 0;width: 100%;">
+<!--  id="collapse3"  -->
+								        		<div class="collapse" id="demo{{$index}}"> 
+									              <table class="table table-striped detailedTimeTableStyle">
+										              <thead>
+
+										              </thead>
+									                 <tbody>
+									                        <tr style="padding: 0 10px;" ng-repeat="dTrow in value">
+									                        	<td style="padding: 8px 10px;font-size: 12px !important;width: 88%;font-weight: bold;" ng-click="$nextStep(2);passRecordDetails($index,value,'timesheet');">{{dTrow.startDate.slice(0,10) | date : format : timezone}} - {{dTrow.endDate.slice(0,10) | date : format : timezone}}</td>					                        	
+									                        	<td style="width: 100%;">{{dTrow.projectName}}</td>
+									                        	<td style="width: 100%;">{{dTrow.activityName}}</td>
+									                        	<td style="width: 60%;font-weight: bold;">{{dTrow.totalHourWorked}} Hrs</td>
+									                        	<td >
+									                        			<span ng-show="dTrow.timesheetStatus=='Approved'" class="apprTag">{{dTrow.timesheetStatus}}</span>
+														            	<span ng-show="dTrow.timesheetStatus=='Submitted'" class="apprIntTag">In Progress</span>
+														            	<span ng-show="dTrow.timesheetStatus=='Rejected'" class="rejcTag">{{dTrow.timesheetStatus}}</span>
+														            	<span ng-show="dTrow.timesheetStatus=='Saved'" class="savTag">{{dTrow.timesheetStatus}}</span>
+														            	<span ng-show="dTrow.timesheetStatus=='In Progress'" class="apprIntTag">{{dTrow.timesheetStatus}}</span>
+														            	<span ng-show="dTrow.timesheetStatus=='Approved Intermediate'" class="apprIntTag">In progress</span>
+
+									                        	</td>
+													            <td style="width: 52%;">
+													            	<span ng-show="dTrow.isInvoiced=='Yes'"><a data-target="#">{{dTrow.invoicedNumber}}</a>
+													            	</span>
+
+													            	<span ng-show="dTrow.isInvoiced=='No'">NA</span>
+
+													            	<!-- <span ng-if="!dTrow.isInvoiced">NA</span> -->
+													            </td>
+									                        </tr>
+									                  </tbody>
+									               	</table>
+		  										</div> 
+
+							            </td>
+							        </tr>
+						       	</tbody>
+							</table>
+				        </md-content>
+				      </md-tab>
+
+				      <!-- Expense -->
+				      <md-tab label="Expense">
+				      	<md-content class="md-padding" st-safe-src="resObjExp" st-table="resObjExpCopy" st-set-filter="customFilter" class="table table-striped">
+					        <div>
+					        	
+					        </div>
+							<div class="filterContainer">
+							  <nav class="navbar navbar-default">
+							    <div class="collapse navbar-collapse js-navbar-collapse">
+							      <ul class="miniFilter nav navbar-nav">
+							        <li class="dropdown mega-dropdown">
+							          <a data-target="#" class="dropdown-toggle" data-toggle="dropdown"> Expense Filters <span class="glyphicon glyphicon-chevron-down pull-right"></span></a>
+
+							          <ul class="dropdown-menu mega-dropdown-menu row">
+							            <li class="col-sm-3">
+							              <ul>
+							                <li class="dropdown-header">Projects</li>
+							                	<st-select-multiple collection="resObjExp" predicate="projectName"></st-select-multiple>
+							              </ul>
+							            </li>
+							            <li class="col-sm-3">
+							              <ul>
+							                <li class="dropdown-header">Status</li>
+								  		  		<st-select-multiple collection="resObjExp" predicate="expenseStatus"></st-select-multiple>
+							                <li class="divider"></li>
+							                <li class="dropdown-header">Invoice</li>
+								  		  		<st-select-multiple collection="resObjExp" predicate="isInvoiced"></st-select-multiple>
+							              </ul>
+							            </li>
+							            <li class="col-sm-5">
+							              <ul >
+							                <li class="dropdown-header">Categories</li>
+							                	<st-select-multiple collection="resObjExp" predicate="categoryName"></st-select-multiple>
+							              </ul>
+							            </li>
+
+							          </ul>
+
+							        </li>
+							      </ul>
+
+							    </div>
+							    <!-- /.nav-collapse -->
+							  </nav>
+							</div>
+
+
+							<table >
+							    <thead>
+						    	<tr>
+
+						        </tr>
+						        <tr>
+						            <th style="width: 88%;" st-sort-default="true" st-sort="startDate">Reporting Cycle <img src="assets/img/sort.png"></th>
+						            <th style="width: 100%;" st-sort="projectName">Project <img src="assets/img/sort.png"></th>
+						            <th style="width: 100%;" st-sort="categoryName">Category <img src="assets/img/sort.png"></th>
+						            <th style="width: 60%;" st-sort="amount"> Amount<img src="assets/img/sort.png"></th>
+						            <th st-sort="timesheetStatus">Status <img src="assets/img/sort.png"></th>
+						            <th st-sort="isInvoiced">Invoice <img src="assets/img/sort.png"></th>
+						        </tr>
+							    </thead>
+							    <tbody collapsecall ng-repeat="(key,value) in resObjExpCopy | groupBy: '[startDate,endDate]'" class="detailTbody">
+
+							        <tr data-toggle="collapse" data-target="#demoExp{{$index}}"  style="border-top: 1px solid #dcdcdc;cursor: pointer;">
+							            <td style="width: 88%;color: #54627d;font-weight: 500;" class="ellip" >{{key.slice(0,10) | date : format : timezone}} - {{key.slice(22,32) | date : format : timezone}}</td>
+							            <td style="width: 100%;">
+							            	<span ng-repeat="proj in value | unique:'projectName' ">{{proj.projectName}}</span>
+							            </td>
+							            <td style="width: 100%;">
+							            	<span class="statusCountOne" ng-show="value.length==1" >{{value.length}} Activity</span>
+							            	<span class="statusCount" ng-show="value.length>1" >{{value.length}} Activities</span></td>
+							            <td style="width: 60%;color: #54627d;font-weight: 600;">${{totExpAmount(value)  | number:2}} </td>
+						            	<td > 
+							            {{getExpStatus(value)}}
+							            	<div>
+							            		<span class="stCountInProgress" >{{inPCount}}</span>
+							            		<span class="stCountAppr">{{appCount}}</span>
+							            		<span class="stCountRej" >{{rejCount}}</span>
+							            	</div>
+							            </td>
+							            <td>
+							            	<span><a data-target="#">{{row.invoicedNumber}}</a>
+							            	<i style="float: right" class="accordion-toggle material-icons">keyboard_arrow_down</i></span>
+							            </td>
+							        </tr>
+							        <tr>
+							        	<td style="padding: 0;width: 100%;">
+<!--  id="collapse3"  -->
+								        		<div class="collapse" id="demoExp{{$index}}"> 
+									              <table class="table table-striped detailedTimeTableStyle">
+										              <thead>
+
+										              </thead> 
+									                 <tbody>
+									                        <tr style="padding: 0 10px;" ng-repeat="dTrow in value">
+									                        	<td style="padding: 8px 10px;font-size: 12px !important;width: 88%;font-weight: bold;" ng-click="$nextStep(2);passRecordDetails(dTrow,'expense');">{{dTrow.startDate.slice(0,10) | date : format : timezone}} - {{dTrow.endDate.slice(0,10) | date : format : timezone}}</td>					                        	
+									                        	<td style="width: 100%;">{{dTrow.projectName}}</td>
+									                        	<td style="width: 100%;">{{dTrow.categoryName}}</td>
+									                        	<td style="width: 60%;font-weight: bold;">${{dTrow.amount | number:2}}</td>
+									                        	<td >
+									                        			<span ng-show="dTrow.expenseStatus=='Approved'" class="apprTag">{{dTrow.expenseStatus}}</span>
+														            	<span ng-show="dTrow.expenseStatus=='Submitted'" class="apprIntTag">In Progress</span>
+														            	<span ng-show="dTrow.expenseStatus=='Rejected'" class="rejcTag">{{dTrow.expenseStatus}}</span>
+														            	<span ng-show="dTrow.expenseStatus=='Saved'" class="savTag">{{dTrow.expenseStatus}}</span>
+														            	<span ng-show="dTrow.expenseStatus=='In Progress'" class="apprIntTag">{{dTrow.expenseStatus}}</span>
+														            	<span ng-show="dTrow.expenseStatus=='Approved Intermediate'" class="apprIntTag">In progress</span>
+
+									                        	</td>
+													            <td style="width: 52%;">
+													            	<span ng-show="dTrow.isInvoiced=='Yes'"><a data-target="#">{{dTrow.invoicedNumber}}</a>
+													            	</span>
+
+													            	<span ng-show="dTrow.isInvoiced=='No'">NA</span>
+									
+													            </td>
+									                        </tr>
+									                  </tbody>
+									               	</table>
+		  										</div> 
+
+							            </td>
+							        </tr>
+						       	</tbody>
+							</table>
+				        </md-content>
+
+				      </md-tab>
+				    </md-tabs>
+				  </md-content>					
+				</script>
+				<!-- ng-if="timeDetail.reportingCycleId==rCdetail.reportingCycleId" -->
+			</tr>
+			</tbody>
+		</table>
+		<!-- </script> -->

@@ -1,0 +1,27 @@
+        <!--Filter Bar -->
+        <section id="my-navigation" class="offcanvas">
+            <i class="fa fa fa-times offcanvas__trigger--close btn" aria-hidden="true" data-offcanvas-close="my-navigation"></i>
+            <!--Project Name -->
+            <div>
+                <select class="ui fluid search selection dropdown drselect" ng-model="myFilter3">
+                    <option value="">--Projects--</option>
+                    <option ng-repeat="item in kanbanBoard.columns[0].hdrRecordCard | unique:'projectName' " value="{{item.projectName}}">{{item.projectName}}</option>
+                </select>
+            </div>
+
+            <!-- Activity Name -->
+            <div>
+                <select class="ui fluid search selection dropdown drselect" ng-model="myFilter4">
+                    <option value="">--Activities--</option>
+                    <option ng-repeat="item in kanbanBoard.columns[0].hdrRecordCard | unique:'title' " value="{{item.title}}">{{item.title}}</option>
+                </select>
+            </div>
+
+            <!-- Name -->
+            <div>
+                <select class="ui fluid search selection dropdown drselect" ng-model="myFilter5">
+                    <option value="">--Employee Names--</option>
+                    <option ng-repeat="item in kanbanBoard.columns[0].hdrRecordCard | unique:'empName' " value="{{item.empName}}">{{item.empName}}</option>
+                </select>
+            </div>
+        </section>

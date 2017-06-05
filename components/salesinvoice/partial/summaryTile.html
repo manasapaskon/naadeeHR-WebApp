@@ -1,0 +1,140 @@
+	<div  ng-init="getDashTile(lastThDays,today);" >
+	<style type="text/css">
+			._md-container {
+			    display: -webkit-inline-box;
+			}
+		    ._md-select-value>span:not(._md-select-icon) ._md-text {
+			    display: inline;
+			    background: #43adde;
+			    /* width: 10px !important; */
+			    color: white;
+			    padding: 3px 6px;
+			    border-radius: 15px;
+			    font-size: 12px;
+			}
+			md-input-container.md-input-has-value {
+			    margin: 4px;
+			    max-width: 400px !important;
+			}
+			md-select {
+			    margin: 0 6px;
+			    display: -moz-deck;
+			    max-width: 400px !important;
+			    min-width: 120px;
+			}
+	</style>
+	<div class="container">
+		<div class="row col-sm-12" style="padding: 0;">
+			<div class="col-sm-12 tileTitleBar" style="">
+				<span class="valign" style="border-right: 1px solid #bbb;padding-right: 15px;">Activity Summary</span> 
+				<i style="color: #43adde;padding-left: 6px;cursor: pointer;" date-range-picker class=" date-picker material-icons valign" ng-model="daterange.range" options="opts" required >today</i>
+				<div style="font-size: 14px;padding-top: 3px;padding-left: 1px;padding-right: 15px;border-right: 1px solid #bbb;" class="valign" >
+					{{changedStartDate}} - {{changedEndDate}}  
+				</div>
+				<div class="valign" style="padding-left: 20px;">				        	
+					  <div class="row">
+					    <div>
+					      <md-chips-select ng-if="dataHasLoaded" ng-model="resFilterChip" select-items="resFilList" main-title="personnelFullName"></md-chips-select>
+					    </div>
+					  </div>
+		        </div>
+		       <div class="valign" >
+		       		<span ng-if="resChipFiltered.length==0" style="font-size: 15px;padding-left: 16px;">All Resources </span>	<span ng-if="resChipFiltered.length==1" style="font-size: 15px;padding-left: 16px;">{{resChipFiltered.length}} Resource </span>			        	
+					<span ng-if="resChipFiltered.length>1" style="font-size: 15px;padding-left: 16px;">{{resChipFiltered.length}} Resources </span>
+		       </div>
+			</div>
+			<div ng-show="!dashTileShow" class="tileLoader" >
+				Creating summary data...
+			</div>
+			<div ng-show="dashTileShow" class="col-sm-3 tile" style="margin-left:8px;background: #f5ffff;">
+				<p class="tileHead"  style="color:#5f6275">Total Submissions</p>
+				<div class="bigNum">
+					<div class="valign col-sm-6" style="padding-right: 0;">
+						<p class="leftNum">{{dashTile.timesheet.totalNumberSubmission | numberFixedLen:2}}</p>
+						<p class="numLabel">Timesheets</p>
+					</div>
+					<div class="valign col-sm-6 ">
+						<p class="ritNum">{{dashTile.expense.totalNumberSubmission | numberFixedLen:2}}</p>
+						<p class="numLabel">Expenses</p>
+					</div>
+				</div>
+				<div>
+					<div class="valign col-sm-6" style="padding: 0 1px 0 0;">
+						<p style="background: #7a7c8a;" class="leftValSub">{{dashTile.timesheet.totalSubmissionHours | number:2}} Hrs</p>
+					</div>
+					<div class="valign col-sm-6"  style="padding: 0 0 0 1px;">
+						<p style="background: #5f6275;" class="ritValSub">${{dashTile.expense.totalSubmissionAmount | number:2}}</p>
+					</div>
+				</div>
+			</div>	
+			<div ng-show="dashTileShow" class="col-sm-3 tile">
+				<p class="tileHead" style="color:#3276a2">Approval In Progress</p>
+				<div class="bigNum">
+					<div class="valign col-sm-6" style="padding-right: 0;">
+						<p class="leftNum">{{dashTile.timesheet.totalNumberApprovalPending | numberFixedLen:2}}</p>
+						<p class="numLabel">Timesheets</p>
+					</div>
+					<div class="valign col-sm-6 ">
+						<p class="ritNum">{{dashTile.expense.totalNumberApprovalPending | numberFixedLen:2}}</p>
+						<p class="numLabel">Expenses</p>
+					</div>
+				</div>
+				<div>
+					<div class="valign col-sm-6" style="padding: 0 1px 0 0;">
+						<p class="leftValPend">{{dashTile.timesheet.totalApprovalPendingHours | number:2}} Hrs</p>
+					</div>
+					<div class="valign col-sm-6"  style="padding: 0 0 0 1px;">
+						<p class="ritValPend">${{dashTile.expense.totalApprovalPendingAmount | number:2}}</p>
+					</div>
+				</div>
+			</div>
+			<div ng-show="dashTileShow" class="col-sm-3 tile">
+				<p class="tileHead" style="color:#099581">Approved</p>
+				<div class="bigNum">
+					<div class="valign col-sm-6" style="padding-right: 0;">
+						<p class="leftNum">{{dashTile.timesheet.totalNumberApproved | numberFixedLen:2}}</p>
+						<p class="numLabel">Timesheets</p>
+					</div>
+					<div class="valign col-sm-6 ">
+						<p class="ritNum">{{dashTile.expense.totalNumberApproved | numberFixedLen:2}}</p>
+						<p class="numLabel">Expenses</p>
+					</div>
+				</div>
+				<div>
+					<div class="valign col-sm-6" style="padding: 0 1px 0 0;">
+						<p class="leftValApr">{{dashTile.timesheet.totalApprovedHours | number:2}} Hrs</p>
+					</div>
+					<div class="valign col-sm-6"  style="padding: 0 0 0 1px;">
+						<p class="ritValApr">${{dashTile.expense.totalApprovedAmount | number:2}}</p>
+					</div>
+				</div>
+			</div>	
+			<div ng-show="dashTileShow" class="col-sm-3 tile">
+				<p class="tileHead" style="color:#e81515">Rejected </p>
+				<div class="bigNum">
+					<div class="valign col-sm-6" style="padding-right: 0;">
+						<p class="leftNum">{{dashTile.timesheet.totalNumberRejected | numberFixedLen:2}}</p>
+						<p class="numLabel">Timesheets</p>
+					</div>
+					<div class="valign col-sm-6 ">
+						<p class="ritNum">{{dashTile.expense.totalNumberRejected | numberFixedLen:2}}</p>
+						<p class="numLabel">Expenses</p>
+					</div>
+				</div>
+				<div>
+					<div class="valign col-sm-6" style="padding: 0 1px 0 0;">
+						<p class="leftValRej">{{dashTile.timesheet.totalRejectedHours | number:2}} Hrs</p>
+					</div>
+					<div class="valign col-sm-6"  style="padding: 0 0 0 1px;">
+						<p class="ritValRej">${{dashTile.expense.totalRejectedAmount | number:2}}</p>
+					</div>
+				</div>
+			</div>
+			<div ng-show="dashTileShow" class="tileArrow" ng-disabled="$isLast();" ng-click="$nextStep(2);">
+				<i class="fa fa-angle-right" aria-hidden="true"></i>
+			</div>
+		</div>
+		<a ui-sref=".summary" >Next</a>{{currentState.name}}
+		
+	</div>		
+	</div>

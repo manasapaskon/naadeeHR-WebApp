@@ -1,0 +1,150 @@
+﻿
+
+
+ <div class="container" layout-gt-sm="column">
+
+    <form  class="login-form"  name="register" ng-submit="register()" role="form">
+
+    <div class="ftitle">
+       <h1>NOAH Cockpit User Registration</h1>
+    </div>
+
+
+    <div class="farea">
+
+  <md-input-container class="md-block">
+        <input required placeholder="Title" name="title" ng-model="title" autofocus>
+        <div ng-messages="register.title.$error">
+          <div ng-message="required">Field is required</div>
+        </div>
+  </md-input-container>
+
+    <div class="valign">
+        <md-input-container class="md-block">
+              <input required placeholder="First Name" name="firstname" ng-model="firstname" >
+              <div ng-messages="register.firstname.$error">
+                <div ng-message="required">Field is required</div>
+              </div>
+        </md-input-container>
+
+          <md-input-container class="md-block">
+              <input placeholder="Middle Name" name="middlename" ng-model="middlename" >
+              <div ng-messages="register.middlename.$error">
+                <div ng-message="required">Middle Name</div>
+              </div>
+        </md-input-container>
+
+          <md-input-container class="md-block">
+              <input required placeholder="Last Name" name="lastname" ng-model="lastname" >
+              <div ng-messages="register.lastname.$error">
+                <div ng-message="required">Field is required</div>
+              </div>
+        </md-input-container> 
+    </div>
+    <div class="valign">
+        <md-input-container class="md-block">
+              <input placeholder="Comments" name="coment" ng-model="comment" >
+              <div ng-messages="register.comment.$error">
+                <div ng-message="required">Comments</div>
+              </div>
+        </md-input-container>
+
+          <md-input-container class="md-block">
+              <input placeholder="Language" name="lang" ng-model="lang" >
+              <div ng-messages="register.lang.$error">
+                <div ng-message="required">language</div>
+              </div>
+        </md-input-container> 
+    </div>
+
+
+
+  <md-input-container class="md-block">
+        <input required placeholder="Name" name="name" ng-model="name" >
+        <div ng-messages="register.name.$error">
+          <div ng-message="required">Field is required</div>
+        </div>
+  </md-input-container>
+
+   <md-input-container class="md-block">
+        <input required placeholder="Username" name="username" ng-model="username" >
+        <div ng-messages="register.username.$error">
+          <div ng-message="required">Username is required.</div>
+        </div>
+  </md-input-container>
+
+  <md-input-container class="md-block">
+        <input required placeholder="Password" type="password" name="password" ng-model="password" >
+        <div ng-messages="register.password.$error">
+          <div ng-message="required">Password is required.</div>
+        </div>
+  </md-input-container>
+
+
+            <div ng-show="error" class="alert alert-danger">{{error}}</div>
+  <md-button type="submit" ng-disabled="register.$invalid || dataLoading" class="md-raised md-primary">Register</md-button>
+
+    </div>
+
+        
+    </form>
+ </div>
+
+
+
+  <style type="text/css">
+    .login-form {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #fff;
+    }
+
+    .container {
+        margin: 135px auto;
+    }
+        h1, input::-webkit-input-placeholder, button {
+  font-family: 'roboto', sans-serif;
+  -webkit-transition: all 0.3s ease-in-out;
+          transition: all 0.3s ease-in-out;
+}
+
+.container.layout-gt-sm-column {
+    margin: 0 auto;
+    padding: 50px;
+}
+
+form {
+  box-sizing: border-box;
+  width: 500px;
+  margin: 100px auto 0;
+  border-radius: 3px;
+}
+form h1 {
+  box-sizing: border-box;
+  padding: 10px;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 18px;
+  background: #046b5e;
+}
+
+.valign {
+    display: -webkit-inline-box;
+    vertical-align: middle;
+}
+
+.ftitle {
+    background: #046b5e;
+    color: #fff;
+    text-align: center;
+}
+.farea
+{
+  padding: 20px;
+}
+
+md-input-container.md-block {
+    margin: 10px 0 0;
+}
+
+  </style>

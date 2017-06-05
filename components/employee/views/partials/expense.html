@@ -1,0 +1,130 @@
+ <form ng-cloak  name="entryForm" role="form">
+       <md-toolbar>
+         <div class="md-toolbar-tools">
+           <div class="col-sm-6">
+             <h2>Expense Entry</h2> 
+           </div>
+           <div class="col-sm-6">
+             <h2 style="float:right">{{name}} </h2>
+           </div>
+         </div>
+       </md-toolbar>
+
+ <md-dialog-content style="overflow:hidden">
+         <div class="md-dialog-content entry">
+   
+           <div id="lineItems{{$index}}" >
+                     <div class="entrymodal-dialog " >
+                       <div class="modal-content lineContent">
+                         <div id="lineItemLoader" class="modal-header lineHeader">
+   
+   
+   
+                            <div class="col-sm-12" style="margin: 30px 0 10px;">
+
+                              <div class="col-sm-3">
+                             <md-input-container >
+                               <label>Project:</label>
+                               <md-select required ng-model="projId" aria-label="Select 1" >
+                                 
+                                 <md-option  ng-repeat="proj in project | orderBy:'projectName'"  value="{{proj}}" >
+                                   {{proj.projectName}}
+                                 </md-option>
+                               </md-select>
+                             </md-input-container> 
+                             </div>
+
+                            <div class="col-sm-5" >
+                             <md-input-container >
+                             <label>Report Cycle:</label>
+                               <md-select required ng-disabled="!projId" ng-model="repCycId" aria-label="Select 2" ng-change="getReportCycle(projId);passDates(repCycId);">
+                                 
+                                 <md-option ng-repeat="repCyc in reportCycle"  value="{{repCyc}}" >
+                                   {{repCyc.startDate.slice(0,10) | date : format : timezone}} - {{repCyc.endDate.slice(0,10) | date : format : timezone}}
+                                 </md-option>
+                               </md-select>
+                              </md-input-container> 
+                             </div>
+  
+                             <div class="col-sm-4">
+                             <md-input-container >
+                             <label>Category:</label>
+                               <md-select required ng-disabled="!repCycId" ng-model="activityId" aria-label="Select 3" >
+                                 
+                                 <md-option ng-repeat="act in activity "  value="{{act.codeId}}" >
+                                   {{act.title}}
+                                 </md-option>
+                               </md-select>
+                             </md-input-container> 
+                              </div>
+                            </div>
+
+                          <h5 ng-show="projId&&repCycId&&activityId" class="right" style="margin: 10px 10px 0;font-size: 18px;color: #ff4081;font-weight: bolder;float:right"><span style="color:#444">Total Expense ($): {{expSum(entryExpValue) | number:2}} </span></h5>
+                         </div>
+   
+                         <div class="modal-body" ng-show="projId&&repCycId&&activityId" style="overflow: auto;max-height: 320px;">
+                           <div > 
+
+                             <table class="table table-striped " >                        
+                               <tbody>
+
+                                <tr style="background: white;color: #b9b9b9;">
+                                  <th style="width: 25%;">Date</th>
+                                  <th style="width: 15%;">Amount</th>
+                                  <th style="width: 60%;">Notes</th>
+                                </tr>
+                                <tr ng-repeat="x in rangeDate" > 
+                                  <td><span class="day">{{x | date :'EEE,'}}&nbsp;</span> <span>{{x | date:'MMM dd yyyy'}}</span></td>
+                                  <td style="background: #f4f4f4;"><input required  ng-model="entryExpValue[$index]" type="number" min="0.00" step="0.01" aria-label="entryValue" class="mail"></td>
+                                  <td><input ng-model="note[$index]" placeholder="Add note" type="text area" ></td>
+                                </tr>
+                               </tbody>
+                             </table>
+                           </div>
+                         </div>
+                       </div>
+   
+                     </div>
+                   </div>
+
+         </div>
+
+
+
+       </md-dialog-content>
+
+        <!-- Modal -->
+        <div id="alrdyExi" class="modal fade" role="dialog">
+          <div class="modal-dialog alrdy">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-body">
+                <p style="font-size: 24px;">Document Already Exists !</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Edit</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+       <md-dialog-actions layout="row">
+         <md-button ng-click="cancel()">
+       cancel
+         </md-button>
+         <span flex></span>
+         <div class="actions" style="float: right;">
+         <md-button class="md-raised md-primary md-button md-ink-ripple" ng-disabled="entryForm.$invalid || dataLoading" ng-click="entryExpObjFunc(projId,activityId,repCycId,'PHRM_SD')" style=" background: #ececec;"> 
+          Save
+         </md-button>
+         <md-button class="md-raised md-primary md-button md-ink-ripple" ng-disabled="entryForm.$invalid || dataLoading" ng-click="entryExpObjFunc(projId,activityId,repCycId,'PHRM_SB')" md-autofocus>
+           Save & Submit
+         </md-button>  
+         </div>
+   
+       </md-dialog-actions>
+
+        </form>

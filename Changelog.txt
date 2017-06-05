@@ -1,0 +1,36 @@
+v317.15.2
+------------------------------------------------------------------------------------------
+1.Multi currency conversion in Entry
+2.Replicate to next week days
+3.Drop down for report downloading
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+v317.16
+------------------------------------------------------------------------------------------
+1.Changed Landing page for Employee
+2.Drop down for report downloading - Added buttons
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+v317.17
+------------------------------------------------------------------------------------------
+1.Warning for card already exist.(even if it is submitted)
+2.Multi currency converted values sent to Noah Tex
+3.Reject reason shown for resources.
+4.Report downloading final UI is given(only CSV)
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+v317.20
+------------------------------------------------------------------------------------------
+1.Report Download dropdown is added with Date range and Filtered resource count
+2.After saving an expense, converted amount is show when the card is opened for view/edit.
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+v317.22.3
+------------------------------------------------------------------------------------------
+1. Updating entry with changable Currency and Reporting Amount
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

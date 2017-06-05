@@ -1,0 +1,113 @@
+﻿
+<style type="text/css">
+  md-input-container.md-block {
+        margin: 0 0 15px 0;
+}
+</style>
+
+ <div class="container" layout-gt-sm="column">
+
+    <form  class="login-form"  name="form" ng-submit="login()" role="form">
+    
+    <div class="ftitle">
+        <img src="assets/img/dev.png" style="width: 100px;float: left;">
+    </div>
+
+    <div class="ftitleTwo">
+        <img src="assets/img/paskon_logo1.png" style="padding: 10px 0 0 0;">
+        <!-- <p class="apptitle">TIME AND EXPENSE COCKPIT</p> -->
+    </div>
+
+    <div class="farea">
+   <label>Username</label>
+   <md-input-container class="md-block">
+        <input required name="username" ng-model="username" autofocus>
+        <div ng-messages="form.username.$error">
+          <div ng-message="required">Username is required.</div>
+        </div>
+  </md-input-container>
+
+  <label>Password</label>
+  <md-input-container class="md-block">
+
+        <input required  type="password" name="password" ng-model="password" >
+        <div ng-messages="form.password.$error">
+          <div ng-message="required">Password is required.</div>
+        </div>
+  </md-input-container>
+
+
+            <div ng-show="error" class="alert alert-danger">{{error}}</div>
+  <md-button type="submit" ng-disabled="form.$invalid || dataLoading" class="md-raised md-primary">Login</md-button>
+
+    </div>
+        
+    </form>
+           <!--     <a ui-sref="register" class="cr">Register</a> -->
+ </div>
+      <div style="margin: 0 auto;text-align: center;font-size: 10px;">
+         <span>Powered By</span><br>
+         <img src="assets/img/poweredby.png">
+         <div class="desc">v1.8.06011</div>
+      </div>
+
+            
+
+  <style type="text/css">
+    .login-form {
+      max-width: 335px;
+      margin: 0 auto;
+      background: #fff;
+    }
+
+    .container {
+        margin: 135px auto;
+    }
+        h1, input::-webkit-input-placeholder, button {
+  font-family: 'roboto', sans-serif;
+  -webkit-transition: all 0.3s ease-in-out;
+          transition: all 0.3s ease-in-out;
+}
+
+a.cr {
+    text-align: center;
+}
+
+form {
+  box-sizing: border-box;
+  width: 335px;
+  margin: 100px auto 0;
+  border-radius: 3px;
+}
+form h1 {
+    box-sizing: border-box;
+    padding: 0 10px 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 18px;
+    color: #636363;
+}
+md-input-container:not(.md-input-invalid).md-input-focused .md-input {
+    border-color:#187dbd;
+}
+
+.ftitle {
+    /* background: #fff; */
+    color: #fff;
+    text-align: center;
+    position: absolute;
+}
+
+.ftitleTwo {
+    background: #fff;
+    color: #fff;
+    text-align: center;
+    padding: 40px 10px 10px 10px;
+}
+
+.farea
+{
+  padding: 20px;
+}
+
+  </style>

@@ -1,0 +1,425 @@
+<!-- Item template -->
+
+<div as-sortable-item-handle >
+    <div >  
+       
+        <div>
+            <div  style="cursor: pointer;" ng-click="lineItems(card.id,card.type, card);randomGen();getDateFormat(card.startDate, card.endDate);editEntry($event,$index,card,lineItems.documentLines);currencyConversion()" class="topclr-{{column.name}}">
+<!-- data-toggle="modal" -->
+                <div class="acname">{{card.title }}</div> 
+               
+                <div class="tothrs" >               
+                    <span class="right" ng-if="card.type == 'expense'">{{card.value | currency }}</span>
+                    <span class="right" ng-if="card.type == 'timesheet'">{{card.value }} Hrs </span>              
+                </div>
+            </div>  
+
+            
+
+
+            <div class="infobox">
+                <span class="left" style="font-size: 13px;font-weight: bolder;">
+               {{card.projectName}}</span>
+
+               <span style="padding-right: 9px;padding-top: 4px;" class="right" ng-if="card.status=='Rejected'">
+                <i style="font-size: 13px;color: #e81515;" class="material-icons">&#xE061;</i>
+               </span>
+
+               <span style="padding-right: 9px;padding-top: 4px;"  class="right" ng-if="card.status=='Saved'">
+                <i style="font-size: 13px;color: #888888;" class="material-icons">&#xE061;</i>
+               </span>
+               <span ng-if="card.rejectReasonName != 'null'" class="right" style="font-size: 10px;margin-top: 3px;margin-right: 4px;padding: 2px 5px;
+                 background: #f1f1f1;color: #e81515;">                                                 
+                    {{card.rejectReasonName}}
+              </span>
+            </div>
+            <div class="infobox1">
+                <span class="left">{{card.startDate | date : format : timezone }} - {{card.endDate | date : format : timezone }} </span>
+                <span class="right" > 
+                    <span class="fa-stack fa-lg pull-left" style="font-size: 13px;color: #94b701;" ng-if="card.type == 'expense'">
+                    <i class="material-icons">credit_card</i></span> 
+                    <span class="fa-stack fa-lg pull-left" style="font-size: 13px;color: #ecb050;" ng-if="card.type == 'timesheet'">
+                    <i class="material-icons">av_timer</i></span> 
+                </span>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="lineItems">
+              <!-- Line Items f-->    
+
+
+             <div>
+                <div class="" role="dialog" >
+                  <div class="update-modal" >
+                    <div class="modal-content lineContent">
+                      <div id="lineItemLoader" class="modal-header lineHeader">
+
+                         <div class="lineEmpName modal-title col-sm-12">
+                           <div class="col-sm-6">
+                             <h4>{{card.title}} </h4>
+                           </div>
+                           <div class="col-sm-6">
+                             <!-- <span class="rejectReason" style="float: right"></span> -->
+                           </div>                              
+                         </div>
+
+
+                         <div class="col-sm-6">
+                            <h4 class="modal-title lineTitle">{{card.projectName}}</h4>
+                            <div class="rowSame">
+                              <div class="colSame card-{{card.status}}">{{card.status}}</div>
+                              <div ng-if="card.rejectReasonName != 'null'" style="color: #ff5858;" class="colSame">{{card.rejectReasonName}}
+                               <img ng-if="card.rejectReasonNote != null" src="assets/img/info.png" style="padding-left: 10px;width: 22px;">
+                                <md-tooltip>{{card.rejectReasonNote}}</md-tooltip>
+                              </div>
+                            </div>                                                     
+                         </div>
+                         <div class="col-sm-6" style="text-align:right;">
+                            <h4 class="modal-title lineTitle">{{card.startDate | date:'MMM dd, yyyy'}} - {{card.endDate | date:'MMM dd, yyyy'}}</h4>
+                          <!--<h6>{{card.empName}}</h6>  -->
+                            <h5 class="right" ng-show="showTbody" ng-if="card.type == 'expense'"  
+                            style="margin: 2px 10px;font-size: 18px;color: #ff4081;font-weight: bolder;">
+                            <span style="color:#444">Total Expense (USD): </span>${{editedTotalExp | number:2}}</h5>
+
+                            <h5 class="right" ng-show="showTbody" ng-if="card.type == 'timesheet'"  
+                            style="margin: 2px 10px;font-size: 18px;color: #4d00d3;font-weight: bolder;">
+                            <span style="color:#444">Total Hours: </span>{{editedTotalTime}} Hrs </h5>
+                      
+                         </div>
+                      </div>
+
+                          <table style="width:99%;margin:0 auto;margin-top: 10px;">
+                            <thead>
+                              <tr >
+                                <th style="width: 20%;padding: 10px;">Dates</th>
+                                <th ng-if="card.type == 'expense'" style="width: 5%;padding: 10px;">Currency</th>
+                                <th style="width: 15%;padding: 10px;">
+                                    <span ng-if="card.type == 'expense'">Expensed Amount</span>
+                                    <span ng-if="card.type == 'timesheet'">Hours Worked</span>
+                                </th>
+                                <th ng-if="card.type == 'expense'" style="width: 15%;padding: 10px;text-align: right;">
+                                  Amount in USD
+                                </th>
+                                <th style="width: 25%;max-width: 25%;padding: 10px;" ng-if="card.type == 'expense'">Attachments</th>
+                                <th style="width: 50%;padding: 10px;">Notes</th>
+                              </tr>
+                            </thead>                    
+                         </table>
+
+                      <div class="modal-body"  style="max-height: 300px;overflow: scroll;padding: 0 5px">
+
+                      <!-- <material-preloadera position="top" height="5px" ></material-preloadera> -->
+                        <div ng-show="!showTbody" class="showtbody">
+                          Loading...
+                        </div>
+                        <div ng-show="showTbody">
+                          <table class="table table-striped" style="margin-bottom: 65px;">
+                            <thead>
+                              <tr >
+                                <th style="width: 20%;padding: 0;"></th>
+                                <th ng-if="card.type == 'expense'" style="width: 5%;padding: 0;"></th>
+                                <th style="width: 15%;padding: 0;">
+                                    <span ng-if="card.type == 'expense'"></span>
+                                    <span ng-if="card.type == 'timesheet'"></span>
+                                </th> 
+                                <th ng-if="card.type == 'expense'" style="width: 15%;padding: 0px;"></th>
+                                <th style="width: 25%;max-width: 25%;padding: 0;" ng-if="card.type == 'expense'"></th>
+                                <th style="width: 50%;padding: 0;"></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr ng-repeat="line in lineItem ">
+
+                                <td class="verticalAlignTop">
+                                    <span ng-if="card.type == 'expense'">
+                                    <span class="day">{{line.dateExpensed| date :'EEE,'}}&nbsp;</span> 
+                                    <span>{{line.dateExpensed | date:'MMM dd, yyyy'}}</span>
+                                    </span>
+
+                                    <span ng-if="card.type == 'timesheet'">
+                                    <span class="day">{{line.dateWorked | date :'EEE,'}}&nbsp;</span> 
+                                    <span>{{line.dateWorked | date:'MMM dd, yyyy'}}</span>
+                                    </span>
+
+                                </td>
+                                <td class="verticalAlignTop" ng-if="card.type == 'expense'">
+                                <md-select aria-label="iso" ng-model="isoUpdate[$index]" ng-init="isoUpdate[$index]=line.currencyIsoCode" ng-change="getUSD(editedExpValue[$index], isoUpdate[$index],$index, lineItem.length);" >
+                                  <md-option aria-label="isoUpdated" ng-selected="{{curArray.isoCode == line.currencyIsoCode}}" ng-value="{{curArray}}" ng-repeat="curArray in currencyConvList">{{curArray.isoCode}}</md-option>
+                                </md-select>
+                                
+                                </td>
+                                <td class="verticalAlignTop" style="background: rgba(152, 152, 152, 0.1);">
+                                    <!-- <span ng-if="card.type == 'expense'" class="curSybmol">{{line}}</span> -->
+                                    <input ng-if="card.type == 'expense'" required ng-model="editedExpValue[$index]" ng-init="editedExpValue[$index]=line.reportingAmount;getUSD(editedExpValue[$index],isoUpdate[$index],$index,lineItem.length);" type="number" min="0.00" step="0.01" class="edit currencyInput" ng-change="editCheckBlank($index);getUSD(editedExpValue[$index], isoUpdate[$index],$index, lineItem.length);"> 
+
+                                    <input ng-if="card.type == 'timesheet'" tp required ng-model="editedTimeValue[$index]" ng-init="editedTimeValue[$index]=line.hoursWorked;editedSumTime(editedTimeValue, lineItem.length)" type="text" step="900" name="" class="edit ttp"  data-time-format="H:i" ng-model-options="{updateOn: 'default blur'}" ng-change="editedSumTime(editedTimeValue, lineItem.length)"> 
+                                </td>
+                                <td class="verticalAlignTop" style="text-align: right;" ng-if="card.type == 'expense'">
+                                <span >${{updatedConvAmount[$index] | number:2}}</span>
+                                </td>
+                                <td class="verticalAlignTop" ng-if="card.type == 'expense'">
+
+
+                                      <!-- old Attch -->
+                                      <span class="attachAlign">
+
+                                          <a ng-if="upmyFile[$index]" id="udlinkfileupload{{$index}}" class="halign" href="#" target="_blank" >
+                                          <img ng-show="fName[$index]" class="imgWidth" id="udimgfileupload{{$index}}" src="#" alt="your image"/></a>
+
+                                          <a ng-if="!upmyFile[$index]"  class="halign" ng-href="data:{{line.fileType}};base64,{{line.fileContent}}" target="_blank" >
+                                          <img ng-show="fName[$index]" class="imgWidth" id="udimgfileupload{{$index}}" src="data:{{line.fileType}};base64,{{line.fileContent}}" alt="your image"/>{{line.fileArray.name}}
+                                          </a>
+<!-- 
+                                          <a ng-if="line.fileType!='application/pdf';" ng-href="" alt="image embedded using base64 encoding!" target="blank">     
+                                               {{line.fileArray.name}}
+                                          </a> -->
+
+                                          <label ng-if="line.attachmentArray.length == 0 && !line.fileArray" for="fileupload{{$index}}" class="custom-file-upload halign" ng-class="fNameClass[$index]">
+                                              <span ng-if="!fName[$index] && !upmyFile[$index]" ng-init="fNameClass[$index]=''" class="attach"><i class="fa fa-cloud-upload"></i> Attach</span> 
+                                              <span style="color:#2186d8" >
+                                              <i ng-if="fName[$index]" ng-model="fNameClass[$index]" ng-init="fNameClass[$index]='fNamecss'" ></i>{{fName[$index]}}</span>
+                                          </label>
+
+                                          
+
+
+                                        <input check-file-size="" type="file" ng-file-model="upmyFile[$index]" id="fileupload{{$index}}" accept="image/x-png, image/gif, image/jpeg, application/pdf" multiple /><br>
+                                         <span ng-repeat="file in upmyFile[$index]"  style="color:#2186d8">
+                                            {{file.name}}
+                                         <tek-progress-bar id="createLoader" class="m-tb-sm" bar-class="progress-bar-warning" ng-model="main.bar2ProgressVal" manager="main.bar2">{{main.bar2ProgressVal}}%</tek-progress-bar> 
+                                         </span>
+
+
+                                        <div style="font-size: 11px;font-weight: bold;color: rgb(221,44,0);" ng-show="upfileSizeAlert[$index]">  Maximum file size allowed is 500KB</div>
+
+
+
+                                         <span ng-repeat="Attachment in line.attachmentArray">
+
+                                            <span ng-if="(line.attachmentArray.length  || fName[$index]) && !line.fileArray" class="halign" style="float:right; top: -50px;" ng-click="deleteAttachmentFromOBServer(Attachment.id, $parent.$parent.$index, $index)">
+                                            <i style="color: #f73c3c;font-size: 13px;float: right;top: -50px;" class="valign fa fa-trash-o"></i>
+                                            </span>
+
+  <!--                                           <i ng-click="deleteAttachmentFromBrgServer(attachName.id,attachName.position,$index)" style="color: #f73c3c;font-size: 13px;float: right;" class="fa fa-trash-o" aria-hidden="true" ></i> -->
+                                    
+
+
+                                            <span ng-if="line.fileArray" class="halign" style="float:right;top: -50px;" ng-click="deleteAttachmentFromOBServer(line.fileId, $index)">
+                                            <i style="color: #f73c3c;font-size: 16px;float: right;" class="valign material-icons">delete_forever</i>
+                                            </span>
+
+                                            <a ng-href="http://dev.app-hr.paskon.com:8080/dev-naadee-hr-tex/download/{{Attachment.id}}"  class="halign" target="_blank">
+                                            <img  class="imgWidth" src="http://dev.app-hr.paskon.com:8080/dev-naadee-hr-tex/download/{{Attachment.id}}">
+                                              {{Attachment.fileName}} <br>
+                                          </a>
+
+                                       </span>
+
+
+
+                                  <span class="thumbnailBorder" style="margin-right: 6px;" ng-repeat="attachName in line.fileArray"> 
+                                    <a id="button" class="noDecoration popupHoverElement" target="_blank" ng-href="data:{{line.fileAttachArray[$index].file.type}};base64,{{attachName.uploadedFile}}">
+                                     <img class="valign" style="width: 9%;" src="data:{{line.fileAttachArray[$index].file.type}};base64,{{attachName.uploadedFile}}">
+                                     <span>{{attachName.fileName}}</span>
+
+                                   <!--   <div id="two" class="popupBox">
+                                      </div> -->
+                                    </a>
+                                    <i ng-click="deleteAttachmentFromBrgServer(attachName.id,attachName.position,$index)" style="color: #f73c3c;font-size: 16px;float: right;" class="valign material-icons">delete_forever</i>
+                                    </br>
+                                                                         
+                                  </span>
+
+                                   <label style="font-size: 11px;" ng-click="changedIndex($index)" for="addfileuploads" class="custom-file-upload halign" ng-class="fNameClass[$index]">
+                                     <i class="fa fa-cloud-upload"></i> Attach
+                                   </label>
+
+                                   <input type="file" ng-file-model="addFile[$index]" id="addfileuploads" accept="image/x-png, image/gif, image/jpeg, application/pdf"  multiple /><br>
+
+                                </span>
+
+
+
+
+                                        <!--  <span ng-if="(line.attachmentArray.length == 1 || fName[$index]) && !line.fileArray" class="halign" style="float:right;" ng-click="deleteAttachmentFromOBServer(line.attachmentArray[0].id, $index)"><i class="fa fa-trash-o" aria-hidden="true" style="color: #F44336;"></i>
+                                        </span>
+                                  
+                                        <span ng-if="line.fileArray" class="halign" style="float:right;" ng-click="deleteAttachmentFromOBServer(line.fileId, $index)"><i class="fa fa-trash-o" aria-hidden="true" style="color: #F44336;"></i>
+                                      </span> -->
+                                  
+
+                                            <div id="uploader{{$index}}" class="modal upfade" role="dialog" >
+                                              <div class="modal-dialog" style="margin: 15%">
+                                                <div class="modal-content">
+                                                  <div class="modal-body">
+                                                  Attaching :  {{fName[$index]}}
+                                                  <i ng-if="main.bar2ProgressVal==100" ng-click="closeUploadModal($index)" class="fa fa-check-circle" aria-hidden="true" style="font-size: 25px;margin: 7px 10px 0;float: right;line-height: 1.8;cursor: pointer;"></i>
+                                                    <tek-progress-bar id="updateLoader" class="m-tb-sm" bar-class="progress-bar-warning" ng-model="main.bar2ProgressVal"
+                                                            manager="main.bar2">{{main.bar2ProgressVal}}%
+                                                    </tek-progress-bar>
+
+                                                  </div>
+                                                </div>
+
+                                              </div>
+                                            </div>
+                                </td>
+                                <td class="verticalAlignTop">
+                                  <input type="text area" ng-model="editedNote[$index]" ng-init="editedNote[$index]=line.note" name="editedNote" placeholder="Add Note">
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+
+                          <div ng-if="card.type == 'expense'">
+                          <form ng-cloak class="col-sm-12 form-horizontal" role="form" name="entryFormA" style="margin-top: 10px;margin: 0 auto;position: fixed;bottom: 55px;background: rgb(255, 255, 255);z-index:100000;padding-top: 30px;box-shadow: 0 -2px 6px 0px rgba(2, 2, 2, 0.">
+                              <div class="form-group" >
+                                <div class="col-md-2" style="width: 230px;"> 
+                                  <md-datepicker required data-ng-model="$parent.expensedDate" ng-init="$parent.expensedDate=upStartDate" md-placeholder="Enter date" md-placeholder="Enter date" md-min-date="upStartDate" md-max-date="upEndDate"></md-datepicker> 
+
+                                </div>
+                                <div class="col-md-2" style="width: 100px">
+                                 <md-input-container>
+                                 <label>Currency</label>
+                                    <md-select ng-model="$parent.currency" required>
+                                        <md-option  data-ng-repeat="crncy in currencyConvList" ng-selected="crncy.isoCode === 'USD' ? true : false">{{crncy.isoCode}}</md-option>
+                                    </md-select>
+                                 </md-input-container>
+                                </div>
+                                <div class="col-md-2" style="width: 110px">
+                                 <md-input-container>
+                                    <input type="number" ng-model="$parent.amount" placeholder="Amount" min="0" step="1" name="employees" required>
+                                 </md-input-container>
+                                </div>
+                                <div class="col-md-2" style="padding: 6px 0;">
+                                  <div ng-show="myFile.length != 0" class="attachTitle">Attachment</div>
+                                  <label for="fileuploader" class="custom-file-upload halign" ng-class="fNameClass[$index]">
+                                     <span ng-if="!fNameTest" ng-init="fNameClass[$index]=''" class="attach">
+                                     <i class="fa fa-cloud-upload"></i> Attach </span>   
+                                     <span ng-show="fNameTest" style="color:#2186d8" >
+                                       <a id="linkId" href="#" target="blank"> 
+                                       <img ng-if="setInp==true" style="width: 15%;" id="imgId" src="#"></a>
+                                       {{fNameTest}} 
+                                     </span>
+                                  </label>
+                                <!--   <input attachview check-file-size="" type="file" id="fileuploader" class="custom-file-input imgInp" file-model="$parent.upmyFiled" accept="image/x-png, image/gif, image/jpeg, application/pdf" >
+                                     <tek-progress-bar id="createLoader" class="m-tb-sm" bar-class="progress-bar-warning" ng-model="main.bar2ProgressVal" manager="main.bar2">{{main.bar2ProgressVal}}%</tek-progress-bar>                               
+                                     <div style="font-size: 12px;font-weight: bold;color: rgb(221,44,0);" ng-show="fileSizeAlert">  Maximum file size allowed is 500KB</div>
+                                 </div> -->
+
+
+
+
+                                  <input check-file-size="" type="file" ng-file-model="$parent.upmyFiled" id="fileuploader" class="custom-file-input imgInp" accept="image/x-png, image/gif, image/jpeg, application/pdf" multiple /><br>
+                                      <span ng-repeat="file in $parent.upmyFiled"  style="color:#2186d8">
+                                     {{file.name}}
+                                      <tek-progress-bar id="createLoader" class="m-tb-sm" bar-class="progress-bar-warning" ng-model="main.bar2ProgressVal" manager="main.bar2">{{main.bar2ProgressVal}}%</tek-progress-bar> 
+
+                                       <div style="font-size: 12px;font-weight: bold;color: rgb(221,44,0);" ng-show="fileSizeAlert">  Maximum file size allowed is 500KB</div>
+
+                                    </span>
+                                    </div>
+
+
+
+
+
+                                 <div id="uploaderq" class="modal upfade" role="dialog" >
+                                  <div class="modal-dialog" style="margin: 15%">
+                                    <div class="modal-content">
+                                      <div class="modal-body">
+                                      Attaching :  {{fName[$index]}}
+                                      <i ng-if="main.bar2ProgressVal==100" ng-click="closeUploadModal($index)" class="fa fa-check-circle" aria-hidden="true" style="font-size: 25px;margin: 7px 10px 0;float: right;line-height: 1.8;cursor: pointer;"></i>
+                                        <div ng-show="tt" >
+                                        <tek-progress-bar ng-show="ty" id="createLoader" class="m-tb-sm" bar-class="progress-bar-warning" ng-model="main.bar2ProgressVal"
+                                                manager="main.bar2">{{main.bar2ProgressVal}}%
+                                        </tek-progress-bar>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <md-input-container>
+                                        <input type="text" placeholder="Note" name="headoffice"
+                                        ng-model="$parent.expenseNote" />
+                                    </md-input-container>
+                                </div>
+
+                                <div class="col-md-2">
+                                  <button type="submit" class="md-raised md-primary md-button md-ink-ripple saveBtn" ng-disabled="entryFormA.$invalid || dataLoading" style=" background: #ececec;line-height: 0px;" ng-click="addRow('update');"> 
+                                    <i class="material-icons">&#xE145;</i>
+                                  </button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                          <div>
+
+                           <md-content md-theme="docs-dark" layout-gt-sm="row" layout-padding >
+
+                            </md-content>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer" style="padding: 0">
+
+                        <md-button class="editBtn" data-dismiss="modal" ng-click="cancelUpdate()">Cancel</md-button>
+                        <md-button class="delBtn" data-toggle="modal" data-target="#delWarn{{lineindex}}">Delete</md-button>
+                    
+
+
+
+                          <div id="delWarn{{lineindex}}" class="modal modalClose" role="dialog">
+                            <div class="modal-dialog alrdy deldialog">
+
+                              <!-- Modal content-->
+                              <div class=" bottoup" >
+                                <div class="modal-body delwarning">
+                                  Are you sure you want to delete?
+                                  <md-button class="delSureBtn" ng-click="deleteDocument(card.id,card.type)">Yes</md-button>
+                                  <md-button class="canBtn" ng-click="closeModal('delWarn',lineindex)" data-dismiss="modalClose">No</md-button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        <!-- <md-button class="savBtn" ng-click="editDocument()">Update and Submit</md-button> -->
+                        <md-button style="margin: 6px 8px !important;" ng-if="card.type == 'timesheet'" class="savBtn" ng-click="updateTimesheet(lineItem,card.id,card.type,$index,'PHRM_SD')">Update</md-button>    
+
+                        <md-button style="margin: 6px 8px !important;"  ng-if="card.type == 'expense'" class="savBtn" ng-click="updateExpense(lineItem,card.id,card.type,$index,'PHRM_SD')">Update</md-button>                           
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              </script>
+
+                <!-- Modal -->
+
+
+<style type="text/css">
+  th {
+    background: #f0f0f0;
+    color: #34534f;
+    border-right: 1px solid #e1e1e1;
+     font-size: 13px;
+}
+  #updateLoader .progress {
+      height: 18px ;
+  }
+
+</style>
+
+<script type="text/javascript">
+
+</script>

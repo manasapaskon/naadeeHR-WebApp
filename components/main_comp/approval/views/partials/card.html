@@ -1,0 +1,177 @@
+<!-- Item template -->
+
+<div as-sortable-item-handle >
+    <div > 
+      
+        <div>
+            <div data-toggle="modal" data-target="#lineItems{{$index}}" style="cursor: pointer;" ng-click="lineItems(card.id,card.type);viewEntry($event,$index,card,lineItems.documentLines);" class="topclr-{{column.name}}">
+
+                <div class="acname">{{card.title }}</div> 
+               
+                <div class="tothrs" >
+                
+                    <span class="right" ng-if="card.type == 'expense'">{{card.value | currency }}</span>
+                    <span class="right" ng-if="card.type == 'timesheet'">{{card.value }} Hrs </span>
+                </div>
+            </div>
+
+
+            <div class="infobox">
+                <span class="left">{{card.projectName}}</span>
+                <span class="right" >                                                 
+                    <span class="fa-stack fa-lg pull-left" style="font-size: 8px;color: #94b701;" ng-if="card.type == 'expense'">
+                    <i class="material-icons">credit_card</i></span> 
+                    <span class="fa-stack fa-lg pull-left" style="font-size: 8px;color: #ecb050;" ng-if="card.type == 'timesheet'">
+                    <i class="material-icons">av_timer</i></span> 
+                </span>
+                <span ng-if="column.name == 'Reject'" class="right" style="font-size: 9px;padding: 2px 5px;background: #f1f1f1;color: #e81515;">                                                 
+                    {{card.rejectReasonName}}
+                </span><br>
+
+            </div>
+
+
+            <div class="infobox1">
+               <span class="left">{{card.startDate | date : format : timezone }} - {{card.endDate | date : format : timezone }} </span>
+              <span class="right">{{card.empName}}</span>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+ <script type="text/ng-template" id="viewLineItems">
+             <!-- Line Items -->
+             <div>
+                <div  class="lineClass" role="dialog" >
+                  <div class="modal-dialog">
+                    <div class="modal-content lineContent" style="max-height: 600px">
+                      <div id="lineItemLoader" class="modal-header lineHeader">
+
+
+                         <div class="lineEmpName modal-title">
+                            <h4>{{card.empName}}</h4>
+                         </div>
+
+                         <div class="col-sm-6">
+                            <h4 class="modal-title lineTitle">{{card.projectName}}</h4>
+                            <h6>{{card.title}}</h6>                            
+                         </div>
+                         <div class="col-sm-6" style="text-align:right;">
+                            <h4 class="modal-title lineTitle">{{card.startDate | date:'MMM dd, yyyy'}} - {{card.endDate | date:'MMM dd, yyyy'}}</h4>
+             <!--                <h6>{{card.empName}}</h6>  -->
+                            <h5 class="right" ng-if="card.type == 'expense'"  
+                            style="margin: 2px 10px;font-size: 18px;color: #ff4081;font-weight: bolder;">
+                            <span style="color:#444">Total Expense ($): </span>{{card.value}}</h5>
+
+                            <h5 class="right" ng-if="card.type == 'timesheet'"  
+                            style="margin: 2px 10px;font-size: 18px;color: #4d00d3;font-weight: bolder;">
+                            <span style="color:#444">Total Hours: </span>{{card.value }} Hrs </h5>
+                      
+                         </div>
+
+                      </div>
+                        <table class="table table-striped" style="width: 99%;margin: 0 auto;">
+                            <thead>
+                              <tr >
+                                <th style="width: 18%">Dates</th>
+                                
+                                <th ng-if="card.type == 'expense'">Currency</th>
+                                <th style="width: 22%">
+                                    <span ng-if="card.type == 'expense'">Expensed Amount</span>
+                                    <span ng-if="card.type == 'timesheet'">Hours Worked</span>
+                                </th>
+                                <th ng-if="card.type == 'expense'">Amount in USD</th>
+
+                                <th ng-if="card.type == 'expense'">Attachments</th>
+                                <th>
+                                Notes
+                                </th>
+                              </tr>
+                            </thead>                   
+                         </table>
+                      <div ng-show="!showTbody" class="showtbody">
+                        Loading...
+                      </div>
+
+                      <div ng-show="showTbody" class="modal-body" style="max-height: 360px;overflow: auto;">
+                        <div >
+                          <table class="table table-striped">
+
+                            <tbody>
+                              <tr ng-repeat="line in lineItem  | orderBy:'dateExpensed' | orderBy:'dateWorked'">
+                                <td style="width: 18%">
+                                    <span ng-if="card.type == 'expense'">
+                                    <span class="dayc">{{line.dateExpensed | date :'EEE,'}}&nbsp;</span> 
+                                    <span>{{line.dateExpensed | date:'MMM dd, yyyy'}}</span>
+                                    </span>
+
+                                    <span ng-if="card.type == 'timesheet'">
+                                    <span class="dayc">{{line.dateWorked | date :'EEE,'}}&nbsp;</span> 
+                                    <span>{{line.dateWorked | date:'MMM dd, yyyy'}}</span>
+                                    </span>
+
+                                </td>
+                                 <td style="width: 17%;">
+                                    <span ng-if="card.type == 'expense'">{{line.currencyIsoCode}}</span>
+                                    <span ng-if="card.type == 'timesheet'">{{line.hoursWorked}} Hrs</span>
+
+
+                                </td>
+                                <td style="width: 20%">
+                                    <span ng-if="card.type == 'expense'">{{line.reportingAmount}}</span>
+
+
+
+                                  </td>
+                                  <td style="width: 17%;">
+                                    <span ng-if="card.type == 'expense'">{{line.amount | currency}}</span>
+                                  </td>
+            
+                                 <td style="width: 30%;" ng-if="card.type == 'expense'">
+                                 <span ng-repeat="Attachment in line.attachmentArray">
+
+                                  <a ng-if="line.attachmentArray.length" target="_blank" href="http://dev.app-hr.paskon.com:8080/dev-naadee-hr-tex/download/{{Attachment.id}}" style="width:5%"><i class="fa fa-paperclip" aria-hidden="true"></i>
+                                  {{Attachment.fileName}}<br>
+                                  </a>
+
+
+                                 </span>
+                                  
+
+                                </td>
+                                <td style="width: 20%;">
+                                  {{line.note}}
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                            
+
+                        </div>
+                      </div>
+                      <div class="modal-footer" style="padding: 0">
+                        <md-button class="editBtn" data-dismiss="modal" ng-click="cancelUpdate()">Cancel</md-button>                      
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                </div>
+                </script>
+
+<style type="text/css">
+   .dayc
+   {
+   color: #2196F3;
+   font-weight: bold;
+   }
+     th {
+    background: #f0f0f0;
+    color: #34534f;
+    border-right: 1px solid #e1e1e1;
+}
+</style>

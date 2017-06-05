@@ -1,0 +1,30 @@
+<div layout="row" >
+
+    <div class="dropdown">
+        <ul class="columnGap" aria-labelledby="dropdownMenu1" style="padding-left: 18px;">
+          <li ng-repeat="item in distinctItems">
+              <md-optgroup label="Meats">
+                <md-checkbox ng-model="item.selected" ng-change="filterChanged();exists(item, selected)" aria-label="Checkbox 1">
+                  {{item.value}}
+                </md-checkbox>
+              </md-optgroup>
+          </li>
+        </ul>
+    </div>
+
+</div>
+
+
+<!--             <input type="Checkbox" ng-model="item.selected" ng-click="filterChanged()" aria-label="Checkbox 1">
+                            {{item.value}} -->
+
+<style type="text/css">
+  md-checkbox {
+    margin-bottom: 0;
+    margin: 15px 15px;
+    font-size: 12px;
+}
+li{
+  list-style: none;
+}
+</style>

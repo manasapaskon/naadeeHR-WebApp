@@ -1,0 +1,40 @@
+
+
+
+
+ <table class="ts-grid table table-striped">
+                               <tbody>
+                                <tr style="background: white;color: #b9b9b9;">
+                                  <th style="width: 25%;">Date</th>
+                                  <th style="width: 15%;" class="ts-total">Hours</th>
+                                  <th style="width: 60%;">Notes</th>
+                                </tr>
+
+                                
+
+<!--                            <tr ng-repeat="x in rangeDate">
+                                  <td><span class="day">{{x | date :'EEE'}} </span> <span>{{x | date :'MMM dd,yyyy'}}</span></td>
+                                  <td style="background: #f4f4f4;">
+                                  <dirr></dirr>
+                                  <input type="text" id="exampleInput" name="input" ng-init="entryValue[$index]=0" ng-model="entryValue[$index]"
+                          placeholder="HH:mm" min="00:00" step="900" aria-label="entryValue" required />
+                          </td>
+                                  <td><input ng-model="note[$index]" placeholder="Add note" type="textarea" ></td>
+                                </tr> -->
+  
+                                         <tr class="ts-row" ng-repeat="x in rangeDate track by $index">
+                                                  <td><span class="day">{{x | date :'EEE,'}}&nbsp;</span> <span>{{x | date :'MMM dd yyyy'}}</span></td>
+                                                  <td class="ts-range" >
+                                                  
+                                                    <input class="ts-time ts-start" type="time" value="00:00"/ style="display:none">
+                                                    <input class="ts-time ts-end" ng-model="entryValue[$index]" step="900" type="time" value="08:00"/ required>
+                                                  
+                                                  </td>
+                                                  <td><input ng-model="note[$index]" placeholder="Add note" type="textarea" ></td>  
+                                        </tr> 
+                                 
+                                
+
+                                
+                               </tbody>
+                             </table>

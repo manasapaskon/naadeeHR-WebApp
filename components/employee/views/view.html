@@ -1,0 +1,1046 @@
+<!-- Approval page-->
+<script> (function(e,t,n){var r=e.querySelectorAll("html")[0];r.className=r.className.replace(/(^|\s)no-js(\s|$)/,"$1js$2")})(document,window,0);</script>  
+
+<style type="text/css"> 
+   md-input-container { 
+   margin:  0;
+       width: 100%; 
+   }
+   md-select {
+   margin: 0 15px;
+   display: -moz-deck;  
+   }
+   md-input-container.md-input-has-value {
+
+   max-width: 260px;
+   min-width: 150px;
+   }
+
+   div#materialPreloader {
+    background: rgba(255,255,255,0.7);
+    height: 100%;
+    z-index: 100;
+    width: 80%;
+  }
+  md-select {
+    margin: 0 6px;
+    display: -moz-deck;
+/*    max-width: 120px;
+    min-width: 120px;*/
+}
+._md-text {
+    font-size: 14px;
+}
+#lineItemLoader ._md-text {
+    font-size: 16px;
+}
+.fade.in {
+    opacity: 1;
+    background: rgba(0,0,0,0.3);
+}
+</style>
+ 
+<div ng-show="hidePage"> 
+
+  <div class="createbar controls" style="padding-left: 0;margin-right: 10px">
+
+    <div id="valign" class="filterWidth">
+          <button class="create" type="button">
+          <i class="fa fa-pencil-square-o" aria-hidden="true"></i><md-tooltip md-direction="top">Create</md-tooltip></button> 
+    </div> 
+    <div id="valign" class="filterWidth">
+          <span class="" ng-click="timeEntry($event,'timesheet');randomGen();" type="button">
+          <i class="material-icons createMicon" style="border-right: 1px solid #eee;color: #43adde;">av_timer</i> <md-tooltip md-direction="top">Create Timesheet</md-tooltip></span> 
+    </div>            
+
+    <div id="valign" class="filterWidth">
+          <span class="" ng-click="expEntry($event,'expense');randomGen();" type="button">
+          <i class="material-icons createMicon"  style="color: #43adde;">credit_card</i> <md-tooltip md-direction="top">Create Expense</md-tooltip></span> 
+    </div> 
+  </div>
+
+
+   <div class="filterbar controls" style="padding-left: 0;">
+
+
+      <div id="valign" class="filterWidth">
+          <button ng-if="myFilter3=='' && myFilter4=='' && myFilter5=='' " class="create" type="button">
+          <img  src="assets/img/fi.png"><md-tooltip md-direction="top">Filters</md-tooltip>
+          </button>
+
+          <button ng-if="myFilter3 || myFilter4 || myFilter5" class="createClear" type="button">          
+          <img ng-click="clearFilter()" src="assets/img/cf.png"><md-tooltip md-direction="top">Clear Filters</md-tooltip>
+          </button>  
+
+<!--           <div ng-if="myFilter3 || myFilter4 || myFilter5" style="color: #686868; font-size: 18px;">
+            <md-tooltip md-direction="top">Clear Filters</md-tooltip>
+            <p style="margin: 0 0 0 5px;font-size: 15px;font-weight: bolder;"><i class="fa fa-filter" ng-click="clearFilter()" aria-hidden="true"></i><sup>x</sup></p>
+          </div> -->
+      </div> 
+
+
+      <div id="valign" class="filterWidth">
+            <span ng-model="myFilter1" ng-class="mF1style" ng-click="etoggleButton();toggle = !toggle"  type="button">
+            <i class="material-icons createMicon"  style="border-right: 1px solid #eee;">av_timer</i> <md-tooltip md-direction="top">Timesheet</md-tooltip></span> 
+      </div>            
+
+      <div id="valign" class="filterWidth">
+            <span ng-model="myFilter2" ng-class="mF2style" ng-click="ttoggleButton();toggle2 = !toggle2"  type="button">
+            <i class="material-icons createMicon" style="border-right: 1px solid #eee;">credit_card</i><md-tooltip md-direction="top">Expense</md-tooltip></span> 
+      </div> 
+
+
+
+
+      <div id="valign" class="filterWidth">
+        <md-select ng-model="myFilter3" aria-label="Select 1" class="projSel">
+          <md-option value="" selected>All Projects</md-option>
+          <md-option ng-repeat="project in empBoard.columns[0].projects | orderBy:project"  value="{{project }}" >
+            {{project }}
+          </md-option>
+        </md-select>
+      </div>  
+      
+
+      <div id="valign" class="filterWidth">
+        <md-select ng-model="myFilter4" aria-label="Select 2" class="catSel" >
+          <md-option value="" selected >All Categories</md-option>
+          <md-option ng-repeat="category in empBoard.columns[0].categories | orderBy:category"  value="{{category}}" >
+            {{category}}
+          </md-option>
+        </md-select>
+      </div>   
+
+
+      <div id="valign" class="filterWidth">
+        <md-select ng-model="myFilter5" aria-label="Select 3" class="repSel" >
+          <md-option value="" selected>All Reporting Cycles</md-option>
+          <md-option ng-repeat="repCycDate in sortrepCycDateArray" value="{{repCycDate.reportCycle}}">   
+          {{repCycDate.reportCycle.slice(0,10) | date : format : timezone}} - {{repCycDate.reportCycle.slice(24,34) | date : format : timezone }}
+         </md-option>
+        </md-select>
+      </div> 
+
+
+   </div>
+
+
+
+
+   <!-- <div class="sortcontrols controls" style="padding-left: 0;">
+       <div id="valign" class="filterWidth">
+          <button class="create" type="button">
+          <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i><md-tooltip md-direction="top">Sort</md-tooltip></button> 
+      </div> 
+
+      <div id="valign" class="filterWidth">
+        <md-select ng-model="sort" style="margin-left: 1px;max-width:90px;min-width: 90px;">
+            <md-option value="proj" selected ng-click="sortBy('projectName',reverse,empBoard);">Project</md-option>
+            <md-option value="tit" ng-click="sortBy('title',reverse,empBoard);">Category</md-option>
+        </md-select>
+      </div>
+
+       <div id="valign">
+          <span ng-click="sortBy(sort,reverse,EmpkanbanBoard);">
+            <span ng-if="reverse==true" style="padding-right: 10px;"><i class="fa fa-sort-amount-asc" aria-hidden="true"></i></span>
+            <span ng-if="reverse==false" style="padding-right: 10px;"><i class="fa fa-sort-amount-desc" aria-hidden="true"></i></span>
+          </span>
+      </div> 
+
+   </div> -->
+
+
+
+
+   <div class="sortcontrols controls" style="padding-left: 0;">
+       <div id="valign" class="filterWidth">
+          <button class="create" type="button">
+          <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i><md-tooltip md-direction="top">Sort</md-tooltip></button> 
+      </div> 
+
+      <div id="valign" class="filterWidth">
+         <md-select id="sortArrow" ng-model="sort" style="margin-left: 1px;max-width:90px;min-width: 90px;">
+            <md-option value="" >SortBy</md-option>
+            <md-option value="projectName" selected="" ng-click="sortBy('projectName',reverse,empBoard);">Project</md-option>
+            <!-- <md-option value="empName"  ng-click="sortBy('empName',reverse,empBoard);">Employee</md-option> -->
+            <md-option value="title" ng-click="sortBy('title',reverse,empBoard);">Category</md-option>
+        </md-select>
+      </div>
+      <div id="valign">
+          <span ng-click="sortBy(sort,reverse,empBoard);">
+            <span ng-if="reverse==true" style="padding-right: 10px;"><i class="fa fa-sort-amount-asc" aria-hidden="true"></i></span>
+            <span ng-if="reverse==false" style="padding-right: 10px;"><i class="fa fa-sort-amount-desc" aria-hidden="true"></i></span>
+          </span>
+      </div>
+
+   </div>
+
+    
+
+
+
+</div>
+
+   <div class="col-sm-4" ng-repeat="column in allCards.columns" style="max-width: 330px;" ng-show="hidePage">
+          <div>
+             <div class="bg-allCards">
+                History
+             </div>
+          </div>
+
+
+
+          <!-- Count  -->
+          <div class="column">
+            <div class="container-fluid columnHeaderHistory">
+              <div class="col-sm-5" >
+                 <h5 style="margin: 1px 0 0 0;font-size: 12px;color: #929292;">Time</h5>
+                 <span style="font-size:22px;font-weight :bolder;" class="txtclr-{{column.name}}" ng-show="toggle">
+                 {{countHistory(column).timeSheet +" / " +totalcountHistory(column).timeSheet }}
+                 </span>
+                 <span style="font-size:22px;color :#673AB7;font-weight :bolder;" ng-hide="toggle">--</span>
+                 <div style="font-size: 12px;color: #252525;" ng-show="toggle">
+                       {{convertToHHMM(getEmpTotal(column).totalTimeSheetHours)}} Hrs
+                 </div>
+                 <span style="font-size:22px;color :#673AB7;font-weight :bolder;" ng-hide="toggle">--</span>
+
+              </div>
+              <div class="col-sm-2">
+                 <hr width="1" size="500">
+              </div>
+              <div class="col-sm-5" >
+                 <h5 style="margin: 1px 0 0 0;font-size: 12px;color: #929292;">Expense</h5>
+                 <span style="font-size:22px;font-weight:bolder;" class="txtclr-{{column.name}}" ng-show="toggle2">
+                 {{countHistory(column).expense +" / " +totalcountHistory(column).expense}}
+                 </span>
+                 <span style="font-size:22px;color :#E91E63;font-weight :bolder;" ng-hide="toggle2">--</span>
+                 <div style="font-size: 12px;color: #252525;" ng-show="toggle2">
+                         ${{getEmpTotal(column).totalExpenseAmount | number:2}}
+                 </div>
+                 <span style="font-size:22px;color :#E91E63;font-weight :bolder;" ng-hide="toggle2">--</span>
+              </div>
+           </div>
+ <!-- | groupBy:'startDate' -->
+            <div>
+               <ul style="background-color: white" class="cards card-list" as-sortable="kanbanSortOptions" data-ng-model="column.documents">
+                  <li class="card" ng-repeat="card in column.documents"  ng-hide="" ng-show="([card] | filter:myFilter1 | filter:myFilter2 | filter:myFilter3| filter:myFilter4| filter:myFilter5 | selectedActs:selectedUsers).length"  style="margin-bottom: 10px;border: 1px solid #eaeaea;"  ng-include src="'components/employee/views/partials/allcard.html'" >
+
+                  </li>
+               </ul>
+            </div>
+          </div>
+   </div>
+
+   <!--  -->
+
+   <div class="col-sm-4"
+      ng-repeat="column in empBoard.columns"
+      data-columnindex="{{$index}}" id="column{{$index}}" style="max-width: 330px;" ng-show="hidePage" >
+      <!-- Title -->
+      <div>
+         <div class="bg-{{column.name}}">
+            {{column.name}}
+         </div>
+      </div>
+
+      <!-- Triangle  -->
+      <div class="center">
+         <img src="assets/img/drop.png">
+      </div>
+      <!-- Count  -->
+      <div class="column">
+         <div class="container-fluid columnHeader">
+            <div class="col-sm-5" >
+               <h5 style="margin: 1px 0 0 0;font-size: 12px;color: #929292;">Time</h5>
+               <span style="font-size:18px;font-weight :bolder;" class="txtclr-{{column.name}}" ng-show="toggle">
+               {{count(column).timeSheet +" / " +totalcount(column).timeSheet }}
+               </span>
+               <span style="font-size:18px;color :#673AB7;font-weight :bolder;" ng-hide="toggle">--</span>
+               <div style="font-size: 12px;color: #252525;" ng-show="toggle">
+                     {{convertToHHMM(getEmpTotal(column).totalTimeSheetHours)}} Hrs
+               </div>
+               <span style="font-size:18px;color :#673AB7;font-weight :bolder;" ng-hide="toggle">--</span>
+
+            </div>
+            <div class="col-sm-2">
+               <hr width="1" size="500">
+            </div>
+            <div class="col-sm-5" >
+               <h5 style="margin: 1px 0 0 0;font-size: 12px;color: #929292;">Expense</h5>
+               <span style="font-size:18px;font-weight:bolder;" class="txtclr-{{column.name}}" ng-show="toggle2">
+               {{count(column).expense +" / " +totalcount(column).expense}}
+               </span>
+               <span style="font-size:18px;color :#E91E63;font-weight :bolder;" ng-hide="toggle2">--</span>
+               <div style="font-size: 12px;color: #252525;" ng-show="toggle2">
+                       ${{getEmpTotal(column).totalExpenseAmount | number:2}}
+               </div>
+               <span style="font-size:18px;color :#E91E63;font-weight :bolder;" ng-hide="toggle2">--</span>
+            </div>
+         </div>
+
+
+
+            <div>
+               <ul class="cards card-list" as-sortable="kanbanSortOptions" data-ng-model="column.documents">
+                        <li class="card" ng-repeat="card in column.documents" ng-hide= "card.status == 'Submitted'" ng-show="([card] | filter:myFilter1 | filter:myFilter2 | filter:myFilter3| filter:myFilter4| filter:myFilter5 | selectedActs:selectedUsers).length" as-sortable-item style="background: white;margin-bottom: 10px;" ng-include src="'components/employee/views/partials/card.html'" >
+                  </li>
+               </ul>
+            </div>
+
+      </div>
+   </div>
+
+
+</div>
+
+
+<!-- on process button -->
+<md-button ng-disabled="!proBtn" class="md-fab" data-toggle="modal" data-target="#entryConfirm" id="notibtn" style="position:fixed;right: 10px;bottom: 10px;" >
+   <i class="material-icons" style="line-height: 2.7;">subscriptions</i><md-tooltip md-direction="top">Process</md-tooltip>
+</md-button>
+
+<!-- Confirmation -->
+<div class="modal fade" id="entryConfirm" role="dialog" >
+   <div class="modal-dialog" style="margin: 15% auto;">
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Approval Confirmation</h4>
+         </div>
+         <div class="container-fluid modal-body" style="padding: 20px;">
+            <div ng-repeat="column in empBoard.columns">
+               <div class="col-sm-12" ng-if="column.name=='Submit' && (totalcount(column).timeSheet!=0 || totalcount(column).expense!=0)">
+                  <div style="font-size: 18px;color: white;background: #00aaf7;padding: 8px;text-align: center;">
+                     Marked For Submit
+                  </div>
+                  <div style="font-size: 18px;font-weight: bolder;color: #0088c5;border: 1px solid #c1c1c1;padding: 8px;text-align:center;">
+                     <span ng-if="totalcount(column).timeSheet!=0">Timesheet(s): {{totalcount(column).timeSheet}}<br></span>
+                     <span ng-if="totalcount(column).expense!=0">Expense(s): {{totalcount(column).expense}}</span>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         <div class="modal-footer">
+            <md-button data-dismiss="modal" ng-click="process(empBoard)" style="background: #00796a;color: white;">Process</md-button>
+            <!--           <md-button type="button" class="btn btn-default " data-dismiss="modal" style="float: left;">Cancel</md-button> -->
+         </div>
+      </div>
+   </div>
+</div>
+
+
+
+<!-- Timesheet Html -->
+
+<script type="text/ng-template"  id="timeEntry" >
+   <md-dialog ng-init="mondayFind()" aria-label="Timesheet">
+       <md-toolbar>
+         <div class="md-toolbar-tools col-sm-12">
+           <div class="col-sm-6">
+             <h2>Time Entry</h2>
+
+           </div>
+           <div class="col-sm-6">
+             <h2 style="float:right">{{name}} </h2>
+           </div>
+         </div>
+         
+
+       </md-toolbar>
+
+       <md-dialog-content style="overflow:hidden">
+
+<!--          <div ng-show="saving" class="saving"> 
+            <span style="text-align: center;top: 15%;">Saving...</span>
+         </div> -->
+      <form ng-cloak class="form-horizontal" role="form" name="entryForm">
+       <div class="form-group">
+         <div class="md-dialog-content entry">
+   
+           <div id="lineItems{{$index}}" >
+
+                     <div class="entrymodal-dialog " >
+                       <div class="modal-content lineContent" style="padding: 0 0px 0 14px;">
+                         <div id="lineItemLoader" class="modal-header lineHeader">
+                         <md-content md-theme="docs-dark" layout-gt-sm="row" layout-padding>
+                          <div class="col-sm-12" style="margin: 10px 0px 0px;">
+
+                              <div class="col-sm-3">
+                              
+                             <md-input-container >
+                               <label>Project:</label>
+                               <md-select ng-model="projId" aria-label="Select 7" required="" ng-change="hideEntry();">
+                                 <!-- <md-option value="" >Select Project</md-option> -->
+                                 <md-option  ng-repeat="proj in project | orderBy:'projectName'"  value="{{proj}}" >
+                                   {{proj.projectName}}
+                                 </md-option>
+                               </md-select>
+                             </md-input-container> 
+                           </div>
+                           <div class="col-sm-5">
+                             <md-input-container >
+                             <label>Reporting Cycle:</label>
+                               <md-select required="" ng-disabled="!projId" ng-model="repCycId" aria-label="Select 8" ng-change="getReportCycle(projId);passDates(repCycId);" >
+                                 <!-- <md-option value="" selected>Select Reporting Cycle</md-option> -->
+                                 <md-option ng-repeat="repCyc in reportCycle"  value="{{repCyc}}" >
+                                   {{repCyc.startDate.slice(0,10) | date : 'MMM dd, yyyy'}} - {{repCyc.endDate.slice(0,10) | date :'MMM dd, yyyy'}}
+                                 </md-option>
+                               </md-select>
+                              </md-input-container>                          
+                            </div>
+
+                           <div class="col-sm-4">
+                             <md-input-container >
+                             <label>Activity:</label>
+                               <md-select required="" ng-disabled="!repCycId" ng-model="activityId" ng-change="cardCheck(projId,activityId,repCycId,'PHRM_SD')" aria-label="Select 9" >
+                                <!--  <md-option value="" selected>Select Category</md-option> -->
+                                 <md-option ng-repeat="act in activity"  value="{{act.codeId}}" >
+                                   {{act.title}}
+                                 </md-option>
+                               </md-select>
+                             </md-input-container> 
+                            </div>
+
+                           
+
+
+<!--                            <input type="checkbox" name="check1" onchange="copyTextValue(this);"/>
+                            <div ng-repeat="x in ['e','r']">
+                              <input id="Name{{$index}}">
+                            </div> -->
+
+                        <h5 class="right" ng-show="showEntry" style="margin: 10px 10px 10px;font-size: 18px;color: #ff4081;font-weight: bolder;float:right">
+                               <span style="color:#444">Total Hours: {{totalTime}} Hrs </span></h5>
+                            </div>
+                         </div>
+                         <div class="modal-body" fadeOut ng-show="showEntry" style="overflow: auto;max-height: 320px;">
+                           
+                           <div>
+                              <table class="ts-grid table table-striped">
+                                <tbody>
+                                  <tr class="ts-row" >
+                                    <td  ng-repeat="x in rangeDate track by $index" style="text-align: center;" class="timepick">
+                                          <span class="day">{{x | date :'EEE,'}} 
+                                            <!-- && {{x | date :'EEE'}} != 'Sat' entryValue[$index] && -->
+                                          <i ng-show="(entryValue[$index]) && ((x | date :'EEE') != 'Sat') && ((x | date :'EEE') != 'Sun')" class="material-icons" ng-click="copyTextValue($index);sumTime(entryValue);" style="font-size: 12px;">content_copy <md-tooltip md-direction="top" style="font-size:10px">Copy to rest of the week days </md-tooltip></i>
+                                          </span>  
+                                          <p>{{x | date :'MMM dd, yyyy'}}</p> 
+                                          <input required tp id="Name{{$index}}" type="text" step="900"  class="ttp" data-time-format="H:i" ng-model="entryValue[$index]" ng-model-options="{updateOn: 'default blur'}" ng-focus="focused = true" ng-blur="focused = false" ng-change="sumTime(entryValue)"/>
+                                          <input style="border-top: 2px solid #eee;" class="note" placeholder="Add note" type="text area" name="notes" ng-model="note[$index]">
+                                      </td>
+                                     </tr>
+                                  </tbody>
+                              </table>
+                           </div>
+                         </div>
+
+                       </div>
+   
+                     </div>
+                   </div>
+                 
+         </div>
+         </div>
+       </md-dialog-content>
+
+
+        <div id="alrdyExi" class="modal modalClose" role="dialog">
+          <div class="modal-dialog alrdy deldialog" style="width:100%">
+
+            <!-- Modal content-->
+            <div class=" bottoup" >
+              <div class="modal-body delwarning">
+                 <i style="color:#FF9800" class="fa fa-exclamation-triangle" aria-hidden="true"></i> Document Already Exists !
+                 <md-button class="okayBtn" ng-click="closeModal('alrdyExi','')">Okay</md-button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+       <md-dialog-actions layout="row">
+
+       <span flex></span>
+  <!--     <div class="actions" style="float: left;">
+         <md-button class="editBtn" data-dismiss="modal" ng-click="cancel()" style="margin: 0 0 5px 0;">
+          Cancel
+         </md-button>
+       </div> -->
+
+        <div class="actions" style="float: left;">
+         <md-button class="editBtn" data-dismiss="modal" ng-click="cancelSave()" style="margin: 0 0 5px 0;">
+          Cancel
+         </md-button>
+       </div>
+         <div class="actions" style="float: right;">
+
+         <button type="submit" class="md-raised md-primary md-button md-ink-ripple saveBtn" ng-disabled="entryForm.$invalid || dataLoading" ng-click="entrytimObjFunc(projId,activityId,repCycId,'PHRM_SD')" style=" background: #ececec;"> 
+          Save
+         </button>
+         <md-button class="md-raised md-primary md-button md-ink-ripple savBtn" ng-disabled="entryForm.$invalid || dataLoading" ng-click="entrytimObjFunc(projId,activityId,repCycId,'PHRM_SB')" md-autofocus>
+           Save & Submit
+         </md-button>  
+         </div>
+   
+       </md-dialog-actions>
+     </form>
+     </md-content>
+   </md-dialog>
+
+</script> 
+
+
+
+<!-- Expense Entry Html -->
+<script type="text/ng-template"  id="expEntry">
+
+   <md-dialog aria-label="Expense" >
+
+       <md-toolbar>
+         <div class="md-toolbar-tools">
+           <div class="col-sm-6">
+             <h2>Expense Entry</h2> 
+           </div>
+           <div class="col-sm-6">
+             <h2 style="float:right">{{name}}</h2>
+           </div>
+         </div>
+       </md-toolbar>
+<!--          <input maxsize class="upload-file" data-max-size="2048000" type="file" >
+        <button type="submit">Submit</button> -->
+
+ <md-dialog-content style="overflow:hidden">
+         <div class="md-dialog-content entry">
+   
+           <div id="lineItems{{$index}}" >
+                     <div class="entrymodal-dialog " >
+                       <div class="modal-content lineContent">
+                         <div id="lineItemLoader" class="modal-header lineHeader">
+   
+
+                            <div class="col-sm-12" style="margin: 30px 0 10px;">
+
+                              <div class="col-sm-3">
+                             <md-input-container >
+                               <label>Project:</label>
+                               <md-select required="" ng-model="projId" aria-label="Select 1" ng-change="hideExpEntry();warning()" >
+                                 
+                                 <md-option  ng-repeat="proj in project | orderBy:'projectName'"  value="{{proj}}" >
+                                   {{proj.projectName}}
+                                 </md-option>
+                               </md-select>
+                             </md-input-container> 
+                             </div>
+
+                            <div class="col-sm-5" >
+                             <md-input-container >
+                             <label>Report Cycle:</label>
+                               <md-select required="" ng-disabled="!projId" ng-click="currencyConversion();" ng-model="repCycId" aria-label="Select 2" ng-change="getReportCycle(projId);passDates(repCycId);clearAttach();warning();">
+                                 
+                                 <md-option ng-repeat="repCyc in reportCycle"  value="{{repCyc}}" >
+                                   {{repCyc.startDate.slice(0,10) | date : format : timezone}} - {{repCyc.endDate.slice(0,10) | date : format : timezone}}
+                                 </md-option>
+                               </md-select>
+                              </md-input-container> 
+                             </div>
+  
+                             <div class="col-sm-4">
+                             <md-input-container >
+                             <label>Category:</label>
+                               <md-select required="" ng-disabled="!repCycId" ng-model="activityId" ng-change="cardCheck(projId,activityId,repCycId,'PHRM_SD')" aria-label="Select 3" >
+                                 
+                                 <md-option ng-repeat="act in activity"  value="{{act.codeId}}" >
+                                   {{act.title}}
+                                 </md-option>
+                               </md-select>
+                             </md-input-container>  
+                              </div>
+                            </div>
+
+
+                          <div id="warning" class="modal modalClose upfade" role="dialog">
+                            <div class="modal-dialog alrdy deldialog">
+
+                              <!-- Modal content-->
+                              <div class=" bottoup" >
+                                <div class="modal-body delwarning">
+                                  You will lose all the data you entered. Do you want to change still ?
+                                  <md-button class="delSureBtn" ng-click="resetExpenseEntry(card.id,card.type)">Yes</md-button>
+                                  <md-button class="canBtn" data-dismiss="modalClose">No</md-button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+<!--                             <div ng-controller="UploadCtrl">
+                              <div ng-repeat="x in ['f','g']">
+                                <input type="file" class="custom-file-input" file-model="myFile[$index]">
+                                <span ng-click="uploadFile()">Upload</span>
+                              </div>
+                            </div> -->
+                          <h5 ng-show="showEntry" class="right" style="margin: 10px 10px 10px;font-size: 18px;color: #ff4081;font-weight: bolder;float:right"><span style="color:#444">Total Expense (USD): ${{upEditSum() | number:2}} </span></h5>
+                         </div>
+
+                         <div class="modal-body" ng-show="showEntry" style="overflow: auto;max-height: 320px;" >
+                           <div id="lineEntryId"> 
+                            <div  style="overflow: auto;max-height: 320px;">
+                          <table class="table table-striped">
+
+                              <thead>
+                              <tr >
+                                <th style="width: 20%;padding: 10px;">Dates</th>
+                                <th  style="width: 5%;padding: 10px;">Currency</th>
+                                <th style="width: 15%;padding: 10px;">
+                                    <span >Expensed Amount</span>
+                                </th>
+                                <th style="width: 15%;padding: 10px;text-align: right;">
+                                  Amount in USD
+                                </th>
+                                <th style="width: 25%;max-width: 25%;padding: 10px;" >Attachments</th>
+                                <th style="width: 50%;padding: 10px;">Notes</th>
+                              </tr>
+                            </thead>  
+                            <tbody>
+                              <tr ng-repeat="line in lineItem ">
+
+                                <td >
+                                    <span >
+                                      <span class="day">{{line.date| date :'EEE,'}}&nbsp;</span> 
+                                      <span>{{line.date | date:'MMM dd, yyyy'}}</span>
+                                    </span>
+                                </td>
+                                <td style="padding: 3px" >
+                                  <md-select ng-model="isoUpdated[$index]" ng-init="isoUpdated[$index]=line.currency" ng-change="getUSD(upEditedExpValue[$index], isoUpdated[$index],$index, lineItem.length);" >
+                                    <md-option aria-label="isoUpdate" ng-selected="{{curArray.isoCode == line.currency}}" ng-value="{{curArray}}" ng-repeat="curArray in currencyConvList">{{curArray.isoCode}}</md-option>
+                                  </md-select>
+                                </td>
+
+                                <td style="background: rgba(152, 152, 152, 0.1);">
+                                    <input style="padding: 4px;" required ng-model="upEditedExpValue[$index]" ng-init="upEditedExpValue[$index]=line.value" type="number" min="0.00" step="0.01" class="edit currencyInput" ng-change="editCheckBlank($index);getUSD(upEditedExpValue[$index], isoUpdated[$index],$index, lineItem.length);upEditSum();"> 
+                                </td>
+
+                                <td style="text-align: right;" >
+                                  <span >${{updatedConvAmount[$index] | number:2}}</span>
+                                </td>
+
+                                <td >
+
+                                  <span class="thumbnailBorder" style="margin-right: 6px;" ng-repeat="attachName in line.fileArray"> 
+                                    <a id="button" class="noDecoration popupHoverElement" target="_blank" ng-href="data:{{line.fileAttachArray[$index].file.type}};base64,{{attachName.uploadedFile}}">
+                                     <img class="valign" style="width: 9%;" src="data:{{line.fileAttachArray[$index].file.type}};base64,{{attachName.uploadedFile}}">
+                                     <span>{{attachName.fileName}}</span>
+                                    </a>
+                                    <i ng-click="deleteAttachmentFromBrgServer(attachName.id,attachName.position,$index)" style="color: #f73c3c;font-size: 13px;float: right;" class="fa fa-trash-o" aria-hidden="true" ></i>
+                                    </br>   
+
+                                  </span>
+
+                                  <label style="font-size: 11px;" ng-click="changedIndex($index)" for="addfileuploads" class="custom-file-upload halign" ng-class="fNameClass[$index]">
+                                     <i class="fa fa-cloud-upload"></i> Attach
+                                  </label>
+
+                                  <input type="file" ng-file-model="addFiles[$index]" id="addfileuploads" accept="image/x-png, image/gif, image/jpeg, application/pdf"  multiple /><br>
+<!-- 
+                                  <span ng-repeat="file in addFiles"  style="color:#2186d8">
+                                  {{file.name}}
+                                  </span> -->
+
+                                </td>
+                                <td >
+                                  <input type="text area" ng-model="editedNote[$index]" ng-init="editedNote[$index]=line.note" name="editedNote" placeholder="Add Note">
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                            </div>
+
+                            <div style="text-align: center;font-size: 20px;padding: 40px;" ng-if="lineItem.length == 0">
+                              No Expenses ! 
+                              <p>Please fill the below fields to add a new expense entry</p>
+
+                              </div>
+
+                          <md-content md-theme="docs-dark" layout-gt-sm="row" layout-padding >
+
+                            <form ng-cloak class="col-sm-12 form-horizontal" role="form" name="entryFormB" style="margin-top: 10px;margin: 0 auto;background: #f9f9f9;">
+                              <div class="form-group">
+                                <div class="col-md-2" style="width: 230px;"> 
+                                  <div style="padding-left: 18px;" ng-show="expensedDate.length != 0" class="attachTitle">Enter date</div>
+                                    <md-datepicker required ng-model="expensedDate" md-placeholder="Enter Date" md-min-date="startRepDate" md-max-date="endRepDate"></md-datepicker> 
+                                </div>
+
+                                <div class="col-md-2" style="width: 100px">
+                                 <md-input-container>
+                                 <label>Currency</label> 
+                                    <md-select ng-model="currency" >
+                                        <md-option  ng-repeat="crncy in currencyConvList" ng-selected="crncy.isoCode === 'USD' ? true : false">{{crncy.isoCode}}</md-option>
+                                    </md-select>
+                                 </md-input-container>
+                                </div>
+
+                                <div class="col-md-2" style="width: 110px">
+                                 <md-input-container>
+                                    <input type="number" ng-model="amount" placeholder="Amount" min="1" step="1" name="employees" required>
+                                 </md-input-container>
+                                </div>
+
+                                 <div class="col-md-2" style="width: 110px">
+                                   <!-- <md-input-container>       -->
+                                      <label for="fileuploads" class="custom-file-upload halign" ng-class="fNameClass[$index]">
+                                         <span  ng-init="fNameClass[$index]=''" class="attach">
+                                         <i class="fa fa-cloud-upload"></i> Attach </span>   
+                                         <span ng-show="fNameTest" style="color:#2186d8" >
+                                           <a id="linkId" href="#" target="blank"> 
+                                           <img style="width: 15%;" id="imgId" src="#"></a>
+                                           
+                                         </span>
+                                      </label>
+
+
+                                      <input type="file" ng-file-model="files" id="fileuploads" accept="image/x-png, image/gif, image/jpeg, application/pdf" multiple /><br>
+
+
+                                      <span ng-repeat="file in fileAttach"  style="color:#2186d8">
+                                      {{file.fileName}}
+                                        <tek-progress-bar id="createLoader" class="m-tb-sm" bar-class="progress-bar-warning" ng-model="main.bar2ProgressVal" manager="main.bar2">{{main.bar2ProgressVal}}%</tek-progress-bar>
+                                      </span>
+<!-- 
+                                      <tek-progress-bar id="createLoader" class="m-tb-sm" bar-class="progress-bar-warning" ng-model="main.bar2ProgressVal" manager="main.bar2">{{main.bar2ProgressVal}}%</tek-progress-bar>   -->
+                                   <!-- </md-input-container> -->
+                                 </div>
+
+
+<!-- 
+                                <div id="uploaderq" class="modal upfade" role="dialog" >
+                                  <div class="modal-dialog" style="margin: 15%">
+                                    <div class="modal-content">
+                                      <div class="modal-body">
+                                      Attaching :  {{fName[$index]}}
+                                      <i ng-if="main.bar2ProgressVal==100" ng-click="closeUploadModal($index)" class="fa fa-check-circle" aria-hidden="true" style="font-size: 25px;margin: 7px 10px 0;float: right;line-height: 1.8;cursor: pointer;"></i>
+                                        <div ng-show="tt" >
+                                        <tek-progress-bar ng-show="ty" id="createLoader" class="m-tb-sm" bar-class="progress-bar-warning" ng-model="main.bar2ProgressVal"
+                                                manager="main.bar2">{{main.bar2ProgressVal}}%
+                                        </tek-progress-bar>
+                                        </div>
+
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div> -->
+
+                                <div class="col-md-2">
+                                    <md-input-container>
+                                        <input type="text" placeholder="Note" name="headoffice"
+                                        ng-model="expenseNote" />
+                                    </md-input-container>
+                                </div>
+                                <div class="col-md-2">
+                                  <button type="submit" class="md-raised md-primary md-button md-ink-ripple saveBtn" ng-disabled=" entryFormB.$invalid && watchAttach" style=" background: #ececec;line-height: 0px;" ng-click="addRow('create');"> 
+                                  <i class="material-icons">&#xE145;</i>
+                                </button>
+                                </div>
+
+                              </div>
+                            </form>
+                            </md-content>
+  
+                           </div>
+                         </div>
+                       </div>
+   
+                     </div>
+                   </div>
+
+         </div>
+
+
+       </md-dialog-content>
+
+        <div id="alrdyExi" class="modal modalClose" role="dialog" >
+          <div class="modal-dialog alrdy deldialog" style="width:100%">
+
+            <!-- Modal content-->
+            <div class=" bottoup" >
+              <div class="modal-body delwarning">
+                 <i style="color:#FF9800" class="fa fa-exclamation-triangle" aria-hidden="true"></i>Document Already Exists !
+                 <md-button class="okayBtn" ng-click="closeModal('alrdyExi','')">Okay</md-button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Modal -->
+
+
+
+       <md-dialog-actions layout="row">
+
+
+
+       <span flex></span>
+       <div class="actions" style="float: left;">
+         <md-button class="editBtn" data-dismiss="modal" ng-click="cancelSave()" style="margin: 0 0 5px 0;">
+          Cancel
+         </md-button>
+       </div>
+
+         <div  class="actions" style="float: right;">
+         <button type="submit" class="md-raised md-primary md-button md-ink-ripple saveBtn" ng-disabled="lineItem.length==0" style=" background: #ececec;" ng-click="entryExpObjFunc(projId,activityId,repCycId,'PHRM_SD')"> 
+          Save
+         </button>
+         <md-button type="submit"  class="md-raised md-primary md-button md-ink-ripple savBtn" ng-disabled="lineItem.length==0" ng-click="entryExpObjFunc(projId,activityId,repCycId,'PHRM_SB')" md-autofocus>
+           Save & Submit
+         </md-button>  
+
+
+         </div>
+   
+       </md-dialog-actions>
+
+
+
+<!-- <div class="modal-body">             
+      <multi-step-container steps="steps" class="simple-prev-next">
+          <header>
+              <button ng-disabled="$isFirst()" class="btn btn-default" ng-click="$previousStep()">
+                  <span class="fa fa-chevron-left"></span>
+                  Previous
+              </button>
+              <strong ng-bind-template="{{$getActiveIndex()}}. {{$getActiveStep().title}}"></strong>
+
+              <button ng-disabled="$isLast()" class="btn btn-default" ng-click="$nextStep()">
+                  Next
+                  <span class="fa fa-chevron-right"></span>
+              </button>
+          </header>
+
+          <main step-container></main>
+      </multi-step-container>
+      </div> -->
+
+    
+   </md-dialog>
+  
+
+</script>
+
+
+
+
+<style type="text/css">
+
+
+
+   md-dialog .md-dialog-content {
+   padding:0;
+   }
+   .entrymodal-dialog {
+   margin: 0;
+   }
+   .entrymodal-dialog {
+   max-width: 100%;
+   width: 100%;
+   }
+
+   .fade.in {
+    opacity: 1;
+    background: rgba(0,0,0,0.6);
+   }
+
+   button.md-primary.md-button.md-ink-ripple {
+    width: auto;
+   }
+
+.ts-grid td {
+    float: left;
+    width: 14%;
+}
+
+
+.supp{
+    color: #F44336;
+    top: 0;
+    left: 4px;
+    font-size: 15px;
+}
+
+p {
+    margin: 0 0 10px;
+    font-size: 12px;
+}
+
+.md-dialog-container {
+    height: 700px !important;
+}
+
+   md-dialog {
+   max-width: 900px;
+   min-width: 900px;
+   }
+   md-toolbar.md-default-theme:not(.md-menu-toolbar), md-toolbar:not(.md-menu-toolbar) {
+   background-color: #187dbd;
+   color: rgba(255,255,255,0.87);
+   min-height: 50px;
+   height: 50px;
+   }
+   md-radio-button {
+   display: -webkit-inline-box;
+   margin: 0;
+   padding: 10px 8px 10px 0;
+   font-size: 16px;
+   }
+   ._md-select-value {
+   font-size: 16px;
+   }
+   md-radio-button.md-default-theme ._md-off, md-radio-button ._md-off {
+   border-color: #fff;
+   }
+   md-radio-button.md-default-theme.md-checked ._md-off, md-radio-button.md-checked ._md-off {
+   border-color: rgb(255, 255, 255);
+   }
+   md-radio-button.md-default-theme.md-checked ._md-on, md-radio-button.md-checked ._md-on {
+   border-color: rgb(255, 255, 255);
+   }
+   md-radio-button.md-default-theme ._md-on, md-radio-button ._md-on {
+   background-color: rgb(255, 255, 255);
+   }
+
+   .day
+   {
+   color: #f37121;
+   font-weight: bold;
+   }
+   label.md-required {
+   margin: 0;
+   }
+   md-input-container.md-input-has-value {
+
+   max-width: 100%; 
+   min-width: 100%;
+   }
+
+   .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th
+   {
+
+   }
+
+   .timepick input {
+    border: none;
+    background: #fff;
+    padding: 4px;
+    border-radius: 3px;
+    width: 100%;
+    text-align: center;
+  }
+
+   input {
+    border: none;
+    background: #fff;
+    border-radius: 3px;
+    width: 100%;
+    padding: 0 5px;
+  }
+  
+  #createLoader .progress {
+      height: 5px;
+  }
+
+</style>
+
+
+<script>
+    
+
+
+   $(function () {
+       $('#my-navigation').iptOffCanvas({
+           baseClass: 'offcanvas',
+           type: 'right'
+   
+       });
+   });
+   
+
+   $(function () {
+       $('.drselect').dropdown();
+   });
+   
+   
+   $("button").click(function () {
+       $(".drselect").val([]);
+   });
+    $('.ttp').timepicker({ 'step': 15 });
+
+
+</script>
+
+
+        
+
+        <!--   <md-menu id="valign" >
+            <md-button style="color: #00796a;font-size: 15px;margin:0;border-right: 1px solid #969696;border-radius: 0;" ng-click="$mdOpenMenu()" class="createBtn">
+              <i class="fa fa-plus" aria-hidden="true"></i> Create
+            </md-button>
+            <md-menu-content>
+              <md-menu-item>
+                  <button  type="button" class="btn btn-info" style=" width: 100%;text-align: left" class="md-primary md-raised " ng-click="timeEntry($event,'timesheet');randomGen();">
+                    <div id="valign" class="filterWidth">
+                      <i aria-label="Open demo menu" class="material-icons" style="line-height: 2;" >av_timer</i>
+                    </div>
+                    <div id="valign" class="filterWidth" style="font-size: 18px;">
+                      Timesheet
+                    </div>
+                  </button>
+              </md-menu-item>
+              <md-menu-divider></md-menu-divider>
+              <md-menu-item>
+                  
+                  <button  type="button" class="btn btn-info" style=" width: 100%;text-align: left" class="md-primary md-raised" ng-click="expEntry($event,'expense');randomGen();">
+                    <div id="valign" class="filterWidth">
+                      <i class="material-icons" style="line-height: 2;" >credit_card</i>
+                    </div>
+                    <div id="valign" class="filterWidth" style="font-size: 18px;">
+                      Expense
+                    </div>
+                  </button>
+              </md-menu-item>
+            </md-menu-content>
+          </md-menu> -->
+
+
+
+<!--    
+       <md-chips ng-model="selectedUsers" md-autocomplete-snap
+               md-transform-chip="transformChip($chip)" class="chipsDiv">
+        <md-autocomplete
+            md-selected-item="selectedItem"
+            md-search-text="searchText"
+            md-items="project in empBoard.columns[0].projects "
+            md-item-text="user.name"
+            placeholder="Search for a user">
+          <span md-highlight-text="searchText">{{project}}</span>
+        </md-autocomplete>
+        <md-chip-template>
+          <span>
+            <strong>{{$chip}}</strong>
+          </span>
+        </md-chip-template>
+       </md-chips>
+
+       <md-chips ng-model="selectedUsers" md-autocomplete-snap
+               md-transform-chip="transformChip($chip)" class="chipsDiv">
+        <md-autocomplete
+            md-selected-item="selectedItem"
+            md-search-text="searchText"
+            md-items="category in empBoard.columns[0].categories "
+            md-item-text="user.name"
+            placeholder="Search for a user">
+          <span md-highlight-text="searchText">{{category}}</span>
+        </md-autocomplete>
+        <md-chip-template>
+          <span>
+            <strong>{{$chip}}</strong>
+          </span>
+        </md-chip-template>
+       </md-chips> -->

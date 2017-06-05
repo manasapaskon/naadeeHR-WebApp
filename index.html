@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <title>Paskon - naadee HR</title>
+
+    <!-- jQuery is not required -->
+    <!-- <script src="//code.jquery.com/jquery-1.11.0.min.js"></script> -->
+
+    <!-- angular Js-->
+
+        
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-resource.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
+  <!-- Angular Material Library -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://use.fontawesome.com/ab3b0e4677.js"></script>
+    <script type="text/javascript" src="assets/libs/bootstrap/ui-bootstrap-tpls-1.3.3.min.js"></script>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+    <!-- Stuff that is only required in this demo (no need to copy) -->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc.5/angular-material.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="assets/libs/framework/demo-framework.css">   
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/drag/ng-sortable.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/drag/ng-sortable.style.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/angular-ui/ngNotificationsBar.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/angular-ui/ngProgress.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/angular-ui/md-chips-select.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/board.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/app.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/side.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/card.css">
+    <link rel="stylesheet" type="text/css" href="components/main_comp/approval/filterbar/filter_bar.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/jquery/jquery.timepicker.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/jquery/myjqdatepicker.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/jquery/materialPreloader.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/libs/angular/angular-timeline.css">
+    <!-- <link rel="stylesheet" href="https://rawgit.com/mominsamir/smDateTimeRangePicker/master/src/picker.css">   -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.13/daterangepicker.min.css" />
+  
+    <script src="assets/libs/framework/demo-framework.js"></script>
+    <script type="text/javascript" src="assets/libs/drag/ng-sortable.js"></script>
+    <script type="text/javascript" src="assets/js/model.js"></script>
+    <script type="text/javascript" src="assets/js/app.js"></script>
+    <script type="text/javascript" src="assets/js/dot.js"></script>
+    <script type="text/javascript" src="assets/js/lodash.js"></script>
+    <script type="text/javascript" src="assets/libs/angular/multistep.js"></script>
+    <script type="text/javascript" src="assets/libs/angular/angularjs-dropdown-multiselect.min.js"></script>
+    <script type="text/javascript" src="assets/js/services/BoardManipulator.js"></script>
+    <script type="text/javascript" src="assets/js/services/BoardDataFactory.js"></script>
+    <script type="text/javascript" src="assets/js/services/BoardService.js"></script>
+    <script type="text/javascript" src="assets/js/services/EmpBoardService.js"></script>
+    <script type="text/javascript" src="components/main_comp/approval/KanbanController.js"></script>
+    <script type="text/javascript" src="components/dashboard/dashController.js"></script>
+    <!-- <script type="text/javascript" src="components/salesinvoice/salesInvoiceController.js"></script> -->
+    <script type="text/javascript" src="components/employee/EmpKanbanController.js"></script>
+
+  
+</head>
+
+
+<body ng-app="demoApp" >
+
+<div id="phone-warning-message">
+    'Naadee - Time and Expense Cockpit' is only viewable on Tablet Devices.
+</div>
+<div id="tab-warning-message">
+    'Naadee - Time and Expense Cockpit' is only viewable in landscape view.
+</div>
+<div id="pc-warning-message">
+    Please increase width of browser to view 'Naadee - Time and Expense Cockpit'
+</div>
+<div id="mainpage" ui-view></div>
+
+<script type="text/javascript">
+                 var isMobile = {
+                  Android: function() {
+                      return navigator.userAgent.match(/Android/i);
+                  },
+                  BlackBerry: function() {
+                      return navigator.userAgent.match(/BlackBerry/i);
+                  },
+                  iOS: function() {
+                      return navigator.userAgent.match(/iPhone|iPod/i);
+                  },
+                  iPad: function() {
+                      return navigator.userAgent.match(/iPad/i);
+                  },
+                  Opera: function() {
+                      return navigator.userAgent.match(/Opera Mini/i);
+                  },
+                  Windows: function() {
+                      return navigator.userAgent.match(/IEMobile/i);
+                  },
+                  any: function() {
+                      return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+                  }
+              };
+              $('#phone-warning-message').hide();
+              if( isMobile.any()) {
+                $('#phone-warning-message').show();
+              };
+
+
+
+
+</script>
+
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js'></script>
+
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc.5/angular-material.js"></script> 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js"></script>
+        <script type="text/javascript" src="components/authentication/controllers.js"></script>
+        <script type="text/javascript" src="components/authentication/services.js"></script>
+        <script type="text/javascript" src="assets/js/checklist-model.js"></script>   
+        <script type="text/javascript" src="assets/libs/angular/angular-timeline.js"></script>
+        <script type="text/javascript" src="assets/libs/angular/ng-bs-daterangepicker.min.js"></script>
+        <script type="text/javascript" src="assets/libs/angular-ui/angular-ui-router.min.js"></script>
+        <script type="text/javascript" src="assets/libs/angular-ui/smart-table.min.js"></script>
+        <script type="text/javascript" src="assets/libs/angular-ui/statehelper.min.js"></script>
+        <script type="text/javascript" src="assets/libs/jquery/jquery.timepicker.min.js"></script>
+        <script type="text/javascript" src="assets/libs/jquery/myjqdatepicker.js"></script>
+        <script type="text/javascript" src="assets/libs/jquery/materialPreloader.min.js"></script>
+        <script type="text/javascript" src="assets/libs/jquery/jquery.jeditable.mini.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-sanitize.min.js"></script>
+        <script type="text/javascript" src="assets/libs/angular/ng-csv.min.js"></script>
+        <script type="text/javascript" src="assets/libs/angular-ui/ngNotificationsBar.min.js"></script>
+        <script type="text/javascript" src="assets/libs/angular-ui/ngprogress.min.js"></script> 
+        <script type="text/javascript" src="assets/libs/angular-ui/ng-file-upload.min.js"></script>
+        <script type="text/javascript" src="assets/libs/angular-ui/progressBarModule.js"></script>
+        <script type="text/javascript" src="assets/libs/angular-ui/progressBar.js"></script>
+        <script type="text/javascript" src="assets/libs/angular-ui/progressBarManager.js"></script>
+        <script type="text/javascript" src="assets/libs/angular-ui/ng-file-upload-shim.min.js"></script>       
+        <script type="text/javascript" src="assets/libs/angular/angular-filter.min.js"></script>
+        <script type="text/javascript" src="assets/libs/moment/moment.js"></script>
+        <script type="text/javascript" src="assets/libs/moment/moment-duration-format.js"></script>
+        <script type="text/javascript" src="assets/libs/moment/twix.min.js"></script>
+        <script type="text/javascript" src="assets/js/multi-select.js"></script>
+        <script type="text/javascript" src="assets/js/side.js"></script>
+        <!-- <script src='https://rawgit.com/mominsamir/smDateTimeRangePicker/master/src/picker.js'></script> -->
+
+        <script type="text/javascript" src="assets/libs/angular/daterangepicker.min.js"></script> 
+        <script type="text/javascript" src="assets/libs/angular/angular-daterangepicker.min.js"></script>
+                <script type="text/javascript" src="assets/libs/angular-ui/md-chips-select.js"></script>
+
+        <!--Filter Bar-->
+
+
+
+
+</body>
+</html>
+  
+       
+
+ 

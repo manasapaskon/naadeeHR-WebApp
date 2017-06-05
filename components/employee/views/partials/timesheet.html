@@ -1,0 +1,11 @@
+<table class="ts-grid table table-striped">
+	<tbody>
+		<tr class="ts-row" >
+			<td  ng-repeat="x in rangeDate track by $index" style="text-align: center;" >
+        		<span class="day">{{x | date :'EEE,'}}</span>  
+            	<p>{{x | date :'MMM dd yyyy'}}</p> 
+            	<input tp id="Name{{$index}}" type="text" step="900" required class="ttp" data-time-format="H:i" ng-model="entryValue[$index]" ng-model-options="{updateOn: 'default blur'}" ng-change="sumTime(entryValue)"/>
+        	</td>
+        </tr>
+    </tbody>
+</table>

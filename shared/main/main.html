@@ -1,0 +1,228 @@
+<nav class="navbar navbar-default no-margin">
+   <!-- navbar-header-->
+
+   <div class="navbar-header fixed-brand">
+      <button type="button" id="toggleBtn" class="navbar-toggle collapsed rotate" data-toggle="collapse" id="menu-toggle">
+      <span style="font-size: 18px;" class="fa fa-bars" aria-hidden="true"></span>
+      </button>
+      <ul class="nav navbar-nav ico" >
+         <li class="active"><button class="navbar-toggle collapse in rotate" data-toggle="collapse" id="menu-toggle-2"> <span class="fa fa-bars " style="font-size: 18px;" aria-hidden="true"></span></button></li>
+      </ul>
+ 
+      <!--         <a class="navbar-brand" href="#"><i class="fa fa-rocket fa-4"></i> NOAH ERP Admin </a> ng-controller="superMainController"-->
+      <div class="apptitle2" id="valign"><span><img src="assets/img/logothumb.png"> </span></div>
+<!--          <div class="apptitle2" id="valign">
+            TIME AND EXPENSE COCKPIT
+         </div> -->
+   </div>
+<!--            <div>
+            <button ng-click="getAlerts(alertUserId)">{{alertUserId}}</button>
+        </div> -->
+   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" >
+      <div class="user ">
+
+      
+         <div id="valign">
+          <div class="dropdown">
+            <a href="" id="menu1" data-toggle="modal" data-target="#alertModal">
+            <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#userModal">Open Modal</button> -->
+            <img src="assets/img/not.png" class="dropdown-toggle" type="button"></a>
+            <div id="alertModal" class="modal fade" role="dialog">
+              <!-- <div class="modal-dialog "> -->
+
+                <!-- Modal content-->
+                <div class="modal-content logoutDropdown">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Notifications</h4>
+                  </div>
+                  <div class="modal-body">
+                      <div ng-if="$storage.x.notifications==null" class="nonoti">
+                        No Notifications
+                      </div>
+                      <div ng-repeat="alert in $storage.x.notifications">
+                        <div class="notiBlock" >
+                         <div><span>{{alert.success}}</span></div>
+                         <div><span style="color: #2f2f2f;font-size: 12px;padding-left: 90%;">{{alert.timestamp | date:'MMM dd, yyyy HH:mm'}}</span></div>
+                        </div>
+                      </div>
+                  </div>
+                  <div ng-if="$storage.x.notifications!=null" class="modal-footer notti">
+                    <span ng-click="delete()" > Clear </span>
+                  </div>
+                </div>
+
+              <!-- </div> -->
+            </div>
+
+          </div> 
+         </div> 
+
+<!--account-->
+
+         <div id="valign">
+          <div class="dropdown">
+            <a href="" id="menu2" data-toggle="modal" data-target="#userModal">
+            <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#userModal">Open Modal</button> -->
+            <img src="assets/img/thumb.png" class="dropdown-toggle" type="button"></a>
+            <div id="userModal" class="modal fade" role="dialog">
+              <!-- <div class="modal-dialog "> -->
+
+                <!-- Modal content-->
+                <div class="modal-content logoutDropdown">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">My Account</h4>
+                  </div>
+                  <div class="modal-body col-sm-12" >
+                    <div class="col-sm-4">
+                      <img src="assets/img/prof.png">                       
+                    </div>
+                    <div class="col-sm-8" style="padding: 10px 0;">
+                      {{userName}}<br>
+                      <!-- <span style="font-size: 11px">{{businessPartner}} </span><br> -->
+                      <span style="font-size: 11px">{{organization}} </span>
+                    </div>
+                  </div>
+                  <div class="modal-footer" style="padding-bottom: 5px;">
+                    <button id="userbox" ng-click="logout()"  class="modal-footer btn btn-default" ui-sref='login'>Logout</button>
+                  </div>
+                  <div style="text-align: center;padding-bottom: 5px">v1.8.06011</div>
+                </div>
+
+              <!-- </div> -->
+            </div>
+
+<!--             <ul id="userModal" class="dropdown-menu dropdown-menu-right notiBar"  role="menu" aria-labelledby="menu2" s>
+               <div class="modal-content logoutDropdown">
+                  <div class="modal-header">
+                      <button type="button" id="userClose" >&times;</button>
+
+                      <h4 class="modal-title">My Account</h4>
+                  </div>
+                  <div class="modal-body">
+                  <img src="assets/img/prof.png"> 
+                     <span>{{userName}}</span> 
+                  </div>
+                  <div class="modal-footer"  style="text-align: center;">
+                    <button id="userbox" ng-click="logout()"  class="modal-footer btn btn-default" ui-sref='login'  >Logout</button>
+                  </div>
+               </div>
+            </ul> -->
+          </div> 
+        </div>
+
+         </div>
+         
+      </div>
+   </div>
+</nav>
+
+
+<div id="wrapper" ng-controller="DemoController"  >
+   <!-- Sidebar -->
+   <div class="navbar-nav navbar-inverse">
+      <md-content  class="md-padding" layout="column"  layout-align="start" id="sidebar-wrapper" data-ng-model="kanbanBoard" data-ng-init="filterProp(kanbanBoard)" id="board" class="navbar-header">
+         <ul class="nav navbar-nav">
+            <li ng-class="{active: states['main.dashboard']}"><a ui-sref="main.dashboard">
+               <span class="fa-stack fa-lg pull-left"><i class="material-icons">dashboard</i>
+               <md-tooltip md-direction="right">Dashboard</md-tooltip>
+               </span>Dashboard</a>
+            </li>
+            <li ng-class="{active: states['main.employee']}"><a ui-sref="main.employee">
+               <span class="fa-stack fa-lg pull-left"><i class="material-icons">person</i>
+               <md-tooltip md-direction="right">My Time & Expense</md-tooltip>
+               </span>My Time & Expense</a>
+            </li>
+<!--             <li ng-class="{active: states['main.project']}"><a ui-sref="main.project" class="cr">
+               <span class="fa-stack fa-lg pull-left"><i class="material-icons">content_paste</i>
+               <md-tooltip md-direction="right">Project</md-tooltip>
+               </span>Project</a> 
+            </li> -->
+            <li ng-class="{active: states['main.approval']}"><a ui-sref="main.approval" class="cr">
+               <span class="fa-stack fa-lg pull-left"><i class="material-icons">check_circle</i>
+               <md-tooltip md-direction="right">Approvals</md-tooltip>
+               </span>Approvals</a>
+            </li>
+            <!-- <li ng-class="{active: states['main.invoice']}"><a ui-sref="main.invoice" class="cr">
+               <span class="fa-stack fa-lg pull-left"><i class="material-icons">toc</i>
+               <md-tooltip md-direction="right">Invoice Summary</md-tooltip>
+               </span>Invoice Summary</a>
+            </li>
+ -->
+            <li style="position: absolute;bottom: 53px;">
+            <div class="outer" style="background: white;padding-left: 5px;">
+              <div style="width: 55%;" class="inner valign"><img src="assets/img/bottom.png"></div>
+              <div style="width: 20%;color: #607d8b;padding-top: 10px;" class="desc valign">v1.8.06011</div>
+            </div>
+            </li>
+
+
+            <!-- bottom logo -->
+<!--             <li style="position: fixed;bottom: 22px;">
+             <span id="bottomLogo" class="bottomLogoCss" style="font-size: 8px;letter-spacing: 2px;position: fixed;bottom: 36px;left: 47px;color: white;">Powered By</span>
+            <div class="cr" style="position:fixed;bottom:28px;color: white;padding-top: 0;margin: -5px 8px;padding-bottom: 0;">
+               <span class="fa-stack fa-lg pull-left"></br><img src="assets/img/bottom.png"></span></div>
+            </li> -->
+
+            <!--             <li ng-class="{active: states['main.history']}"><a ui-sref="main.history">History</a></li> -->
+         </ul>
+
+      </md-content>
+   </div>
+   <!-- /#sidebar-wrapper -->
+   <!-- Page Content -->
+  <material-preloader position="top" height="5px" col1='#159756' col2='#da4733' col3='#3b78e7' col4='#fdba2c' ></material-preloader>
+
+   <div class="accDen" ng-show="accessDeny">
+                  <p style="font-size: 24px;text-align: center;"><i style="color:#F44336" class="fa fa-ban" aria-hidden="true"></i>
+                You don't have permission to access this resource </p>
+   </div>
+
+   <div id="page-content-wrapper" ng-cloak ng-show="!accessDeny">
+      <div class="container-fluid  xyz">
+         <div class="row">{{currentState.name}}
+            <div class="col-sm-12" ui-view></div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<style type="text/css">
+  .dropdown{
+    margin: 0;
+  }
+  body {
+    background-color: #e5edf1;
+  }
+
+</style>
+<script type="text/javascript" src="components/main_comp/approval/filterbar/filter_bar.js"></script>
+<script>
+
+   $("#menu-toggle-2").click(function (e) {
+       e.preventDefault();
+       $("#wrapper").toggleClass("toggled-2");
+       $("#bottomLogo").toggleClass("bottomLogoCssToggle");
+       $('#menu ul').hide();
+   });
+   
+
+   $(".rotate").click(function () {
+       $(this).toggleClass("down");
+   })
+
+   $(function() {
+     $("#alertClose").click(function () {
+         $('.modal').modal('hide');
+     })
+ 
+  });
+
+
+   
+    if(window.innerWidth < 1100){
+      // $("#wrapper").toggleClass("toggled-2");
+      $("#menu-toggle-2").click();
+     
+    }

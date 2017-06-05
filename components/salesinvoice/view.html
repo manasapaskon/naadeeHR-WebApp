@@ -1,0 +1,234 @@
+<!-- sales invoice Summary-->
+<style type="text/css">  
+	
+</style>
+
+
+
+<script  ng-init="getSalesInvoiceSummaryTile(lastThDays,today);" type="text/ng-template" id="salesInvoiceSummaryTile">	
+<!-- <div> -->
+
+<div class="container">
+   <div class="row col-sm-12" style="padding: 0;">
+	 <div class="col-sm-12 tileTitleBar" style="">
+
+     <div><span class="valign" style="margin-left:0px;border-right: 1px solid #bbb;padding-right: 15px;padding-left: 0px;font-size: 20px;">Invoice Summary</span> 
+     	<i style="color: #43adde;padding-left: 6px;cursor: pointer;" date-range-picker class=" date-picker material-icons valign" ng-model="daterange.range" options="opts" required >today</i>
+     	<div style="font-size: 14px;padding-top: 3px;" class="valign" >
+					{{changedStartDate}} - {{changedEndDate}}  
+		</div>
+	
+     </div>
+
+ 	<div>
+		<!-- Total Due Amount -->
+		<div class="col-sm-3 tile" style = "background: rgb(245, 255, 255);width: 22%;height: 100px;" aria-hidden="false">
+			<div>
+			    <center><p style="color:#5f6275;font-size: 80%;margin-top: 12px;">Over Due</p></center>
+			</div>
+			<div>
+			    <center><p style="color:black;font-size: 100%;">{{currency}} {{summaryDueAmount | number:2 }}</p>
+			    <p style="margin-top: -10px;">
+				     <span style="color:#5f6275;font-size: 60%;">As Of</span>
+				     <span style="color:black;font-size: 70%;"> {{changeDateFormat(today)}}</span>
+			     </p></center>
+			</div>
+		</div>
+
+		<!-- Total Invoiced Amount -->
+		<div class="col-sm-3 tile" style="background: rgb(245, 255, 255);width: 22%;height: 100px;" aria-hidden="false">
+			<div>
+				<center><p style="color:#5f6275;font-size: 80%;margin-top: 12px;">Total Invoiced</p></center>
+			</div>
+			<div>
+				<center><p style="color:black;font-size: 100%;">{{currency}} {{summarytotalAmount | number:2 }}</p></center>
+			</div>
+		</div>
+
+		<!-- Total Paid Amount -->
+		<div class="col-sm-3 tile" style="background: rgb(245, 255, 255);width: 22%;height: 100px;" aria-hidden="false">
+			<div>
+				<center><p style="color:#5f6275;font-size: 80%;margin-top: 12px;">Total Paid</p></center>
+			</div>
+			<div>
+				<center><p style="color:black;font-size: 100%;">{{currency}} {{summaryPaid | number:2}}</p></center>
+			</div>
+		</div>
+
+	    <!-- Total Out Standing Amount -->
+		<div class="col-sm-3 tile" style="background: rgb(245, 255, 255);width: 22%;height: 100px;" aria-hidden="false">
+			<div>
+				<center><p style="color:#5f6275;font-size: 80%;margin-top: 12px;">Total Out Standing</p></center>
+			</div>	
+			<div>
+				<center><p style="color:black;font-size: 100%;">{{currency}} {{summaryOutstandingAmount | number:2 }}</p></center>
+			</div>
+		</div>
+
+
+		<div>
+			<div style=" width: 30px;display: -webkit-inline-box; vertical-align: middle;background: white; padding: 42px 10px;
+			font-size: 30px;margin-left: 3px;color: #ffffff; background: #43adde;" ng-disabled="$isLast();" ng-click="$nextStep(2);">
+					<i class="fa fa-angle-right" aria-hidden="true"></i>
+			</div>
+		</div>
+	  </div>      
+   </div>
+
+</div>
+</script>
+
+<!-- invoice header -->
+	<script  ng-init="getSalesInvoiceSummary(lastThDays,today);" type="text/ng-template" id="salesInvoiceSummary">	
+	<div style="background: #E0 E0E0;">
+		<span style="color:black;font-size: 200%;padding:15px;">
+		<i style="background: rgba(103, 103, 103, 0.87);border-radius: 50%;color: white;font-size: 20px;margin-top: 10px;" class="material-icons valign" ng-disabled="$isFirst()" ng-click="$previousStep()" role="button" tabindex="0" aria-disabled="false">keyboard_arrow_left</i>
+		</span>
+
+       <span class="valign" style = "margin-left:0px; border-right: 1px solid #bbb;padding-right: 15px;padding-left: 15px;font-size: 20px;">
+            {{salesInvoiceSummaryData.invoiceSummary[0].businessPartner}}
+       </span> 
+
+		<i style="color: #43adde;padding-left: 6px;cursor: pointer;" date-range-picker class=" date-picker material-icons valign" ng-model="daterange.range" options="opts" required >today</i>
+     	<div style="font-size: 14px;padding-top: 3px;" class="valign" >
+					{{changedStartDate}} - {{changedEndDate}}  
+		</div>
+		<br>		
+	</div>
+	<br>
+	<div>	   
+		<table >		    
+				<thead>
+					<tr style="background: #f7f7f7;">
+						<th class="dashthleft" style = "font-size: 17px;">Project: </th>
+						<th class="dashth" style = "font-size: 17px;">Customer Cost Center: </th>										
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>		
+					<tr ng-repeat="val in salesInvoiceSummaryData.invoiceSummary">
+						<td class="dashthleft" style = "font-size: 19px;">{{salesInvoiceSummaryData.invoiceSummary[0].project}}</td>	
+						<td class="dashth" style = "font-size: 19px;">{{salesInvoiceSummaryData.invoiceSummary[0].custCostCenter}}</td>
+						<td style="padding: 10px 10px;text-align: right;">
+							<i style="border-radius: 50%;color: #54617b;margin-right: 5px;font-size: 28px;" class="material-icons valign" ng-disabled="$lastStep();" ng-click="$nextStep();" role="button" tabindex="0" aria-disabled="false">keyboard_arrow_right</i>					
+						</td>		
+					</tr>
+				</tbody>
+		</table >
+	</div>
+	</script>
+
+
+	<div>
+		<br><br>
+	</div>
+
+
+   <!-- Sales nvoices List -->
+	<script  type="text/ng-template" id="salesInvoiceSummaryTable">	
+	<span style="color:black;font-size: 200%;padding:15px;">
+	<i style="background: rgba(103, 103, 103, 0.87);border-radius: 50%;color: white;font-size: 20px;" class="material-icons valign" ng-disabled="$isFirst()" ng-click="$previousStep()" role="button" tabindex="0" aria-disabled="false">keyboard_arrow_left</i>
+	</span>
+	<span style="color:black;font-size: 20px;margin-left:0px; border-right: 1px solid #bbb;padding-right: 15px;padding-left: 15px;">Sales Invoices</span>
+	<i style="color: #43adde;padding-left: 6px;cursor: pointer;margin-top: -5px;" date-range-picker class=" date-picker material-icons valign" ng-model="daterange.range" options="opts" required >today</i>
+     	<div style="font-size: 14px;margin-top: -5px;" class="valign" >
+					{{changedStartDate}} - {{changedEndDate}}  
+		</div>
+	<br>
+	<div>
+		<table >
+		<thead>
+			<tr style="background: #f7f7f7;">
+				<th class="dashthleft">Document Number</th>
+				<th class="dashth" >Invoice Date</th>
+				<th class="dashth" >Over Due</th>
+				<th class="dashth" >Invoice Total Amount</th>
+				<th class="dashth" >Payment Complete</th>				
+				<th class="dashth" >Total Paid</th>	
+				<th class="dashth" >Total Outstanding</th>		
+				<!-- <th class="dashth" >IsSOTrx</th>	-->
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>		     
+			<tr ng-repeat="val in salesInvoiceSummaryData.invoiceSummary[0].salesInvoice.invoices | orderBy:'documentNo' ">
+				<td class="dashthleft">{{val.documentNo}}</td>	
+				<td class="dashth">{{val.invoiceDate.slice(0,10) | date : format : timezone}}</td>
+				<td class="dashth">{{val.currency}} {{val.totalDueAmount | number:2 }}</td>
+				<td class="dashth">{{val.currency}} {{val.invoiceTotalAmount | number:2 }}</td>
+				<td class="dashth">{{val.paymentComplete}}</td>				
+				<td class="dashth">{{val.currency}} {{val.totalPaid | number:2 }}</td>	
+				<td class="dashth">{{val.currency}} {{val.totalOutstanding | number:2 }}</td>
+				<!-- <td class="dashth">{{val.salesInvoiceLinesCount}}</td>		-->
+			    <!-- <td class="dashth">{{val.isSOTrx}}</td> -->
+				<td style="padding: 10px 10px;text-align: right;">
+				            {{val.salesInvoiceLinesCount}}
+							<i style="border-radius: 50%;color: #54617b;margin-right: 5px;font-size: 28px;" class="material-icons valign" ng-disabled="$lastStep();" ng-click="getSalesInvoiceLines(val);$nextStep();" role="button" tabindex="0" aria-disabled="false">keyboard_arrow_right</i>							
+				</td>
+			</tr>
+		</tbody> 
+
+
+	</table >
+	</div>
+
+	</script>
+
+	 <!-- Sales invoice Lines List -->
+	<script  type="text/ng-template" id="salesInvoiceLineSummaryTable">	
+	<span style="color:black;font-size: 200%;padding:15px;">
+	<i style="background: rgba(103, 103, 103, 0.87);border-radius: 50%;color: white;font-size: 20px;" class="material-icons valign" ng-disabled="$isFirst()" ng-click="$previousStep()" role="button" tabindex="0" aria-disabled="false">keyboard_arrow_left</i>
+	</span>
+	<span style="color:black;font-size: 20px;">Sales Invoice Lines</span>
+	<br>	
+	<div>
+		<table >
+		<thead>
+			<tr style="background: #f7f7f7;">
+				<th class="dashthleft">Line Number</th>		
+				<th class="dashth" >Billing Dates</th>		
+				<th class="dashth" >Resource</th>
+			<!--	<th class="dashth" >Product</th>  -->
+				<th class="dashth" >Invoiced Qty</th>				
+				<th class="dashth" >Rate</th>	
+				<th class="dashth" >Line Net Amount</th>
+												
+			<!--	<th class="dashth" >Billing End Date</th>	-->
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>		
+			<tr ng-repeat="val in invoiceLines">
+				<td class="dashthleft">{{val.lineNumber}}</td>	
+				<td class="dashth">{{val.billingStartDate.slice(0,10) | date : format : timezone}} - {{val.billingEndDate.slice(0,10) | date : format : timezone}}</td>		
+				<td class="dashth">{{val.resource}}</td>		
+			<!--	<td class="dashth">{{val.product}}</td>  -->
+				<td class="dashth">{{val.invoicedQuantity}}</td>				
+				<td class="dashth">{{val.currency}} {{val.rate}}</td>
+				<td class="dashth">{{val.currency}} {{val.lineNetAmount | number:2 }}</td>
+				
+								
+			<!--	<td class="dashth">{{val.billingEndDate.slice(0,10) | date : format : timezone}}</td> -->
+				
+			</tr>
+		</tbody>	
+	</table >
+	</div>
+	</script>
+
+
+	<body>	
+	
+	<multi-step-container steps="steps" class=" simple-prev-next" search-id="'check'">
+ 		<main step-container style="background: #f3f3f3;"></main>
+	</multi-step-container>
+
+
+	</body>
+
+    
+    
+
+	
+
+

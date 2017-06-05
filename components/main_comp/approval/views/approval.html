@@ -1,0 +1,383 @@
+<!-- Approval page-->
+
+
+<style type="text/css">
+  md-input-container {
+    margin:  0;
+  }
+
+  md-select-value#select_value_label_{{index}} {
+    border-bottom: none;
+  }
+
+  md-select {
+    margin: 0 6px;
+    display: -moz-deck;
+    max-width: 120px;
+    min-width: 120px;
+}
+md-dialog {
+    max-width: 900px;
+    min-width: 900px;
+}
+md-input-container.md-input-has-value {
+    margin: 4px;
+    max-width: 150px;
+}
+div#materialPreloader {
+    background: rgba(255,255,255,0.7);
+    height: 100%;
+    z-index: 100;
+    width: 80%;
+}
+.fade.in {
+    opacity: 1;
+    background: rgba(0,0,0,0.6);
+}
+</style>
+
+
+
+
+
+
+<div ng-show="hidePage">
+
+
+   <div class="filterbarApproval controls" style="padding-left: 0;">
+
+
+      <div id="valign" class="filterWidth">
+          <button ng-if="myFilter3=='' && myFilter4=='' && myFilter5=='' &&  myFilter6==''" class="create" type="button">
+          <img  src="assets/img/fi.png"><md-tooltip md-direction="top">Filters</md-tooltip>
+          </button>
+
+          <button ng-if="myFilter3 || myFilter4 || myFilter5 || myFilter6" class="createClear" type="button">          
+          <img ng-click="clearFilter()" src="assets/img/cf.png"><md-tooltip md-direction="top">Clear Filters</md-tooltip>
+          </button> 
+
+      </div> 
+
+      <div id="valign" class="filterWidth">
+            <span ng-model="myFilter1" ng-class="mF1style" ng-click="etoggleButton();toggle = !toggle"  type="button">
+            <i class="material-icons createMicon"  style="border-right: 1px solid #eee;">av_timer</i> <md-tooltip md-direction="top">Timesheet</md-tooltip></span> 
+      </div>            
+
+      <div id="valign" class="filterWidth">
+            <span ng-model="myFilter2" ng-class="mF2style" ng-click="ttoggleButton();toggle2 = !toggle2"  type="button">
+            <i class="material-icons createMicon" style="border-right: 1px solid #eee;">credit_card</i><md-tooltip md-direction="top">Expense</md-tooltip></span> 
+      </div> 
+
+
+
+
+      <div id="valign" class="filterWidth">
+        <md-select ng-model="myFilter3" aria-label="Select 1" class="projSel">
+          <md-option value="" selected>All Projects</md-option>
+          <md-option ng-repeat="project in kanbanBoard.columns[0].projects | orderBy:project"  value="{{project }}" >
+            {{project }}
+          </md-option>
+        </md-select>
+      </div>  
+      
+
+      <div id="valign" class="filterWidth">
+        <md-select ng-model="myFilter4" aria-label="Select 2" class="catSel">
+          <md-option value="" selected >All Categories</md-option>
+          <md-option ng-repeat="category in kanbanBoard.columns[0].categories | orderBy:category"   value="{{category}}" >
+            {{category}}
+          </md-option>
+        </md-select>
+      </div>   
+
+
+      <div id="valign" class="filterWidth">
+        <md-select ng-model="myFilter5" aria-label="Select 3" class="catSel">
+          <md-option value="" selected>All Employees</md-option>
+          <md-option ng-repeat="resource in kanbanBoard.columns[0].resources | orderBy:resource"  value="{{resource}}" >
+            {{resource}}
+          </md-option>
+        </md-select>
+      </div>
+
+      <div id="valign" class="filterWidth">
+        <md-select ng-model="myFilter6" aria-label="Select 3" class="repSelApr">
+          <md-option value="" selected>All Reporting Cycle</md-option>
+          <md-option ng-repeat="repCycDate in sortrepCycDateArray" value="{{repCycDate.reportCycle}}">   
+          {{repCycDate.reportCycle.slice(0,10) | date : format : timezone}} - {{repCycDate.reportCycle.slice(24,34) | date : format : timezone }}
+         </md-option>
+        </md-select>
+      </div> 
+      <div id="valign" class="filterWidth">
+        <i ng-click="resetColumns()" class="material-icons">refresh</i>
+        <md-tooltip>Reset</md-tooltip>
+      </div> 
+
+   </div>
+
+   
+
+   <div class="sortcontrols controls" style="padding-left: 0;">
+       <div id="valign" class="filterWidth">
+          <button class="create" type="button">
+          <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i><md-tooltip md-direction="top">Sort</md-tooltip></button> 
+      </div> 
+
+      <div id="valign" class="filterWidth">
+         <md-select id="sortArrow" ng-model="sort" style="margin-left: 1px;max-width:90px;min-width: 90px;">
+            <md-option value="" >SortBy</md-option>
+            <md-option value="projectName" selected="" ng-click="sortBy('projectName',reverse,kanbanBoard);">Project</md-option>
+            <md-option value="empName"  ng-click="sortBy('empName',reverse,kanbanBoard);">Employee</md-option>
+            <md-option value="title" ng-click="sortBy('title',reverse,kanbanBoard);">Category</md-option>
+        </md-select>
+      </div>
+      <div id="valign">
+          <span ng-click="sortBy(sort,reverse,kanbanBoard);">
+            <span ng-if="reverse==true" style="padding-right: 10px;"><i class="fa fa-sort-amount-asc" aria-hidden="true"></i></span>
+            <span ng-if="reverse==false" style="padding-right: 10px;"><i class="fa fa-sort-amount-desc" aria-hidden="true"></i></span>
+          </span>
+      </div>
+
+   </div>
+
+
+
+
+
+</div>
+   
+
+        <div id="accessDeny" class="modal fade" role="dialog">
+          <div class="modal-dialog alrdy">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+              <div class="modal-body">
+                <p style="font-size: 24px;text-align: center;"><i style="color:#F44336" class="fa fa-ban" aria-hidden="true"></i>
+                You don't have permission to access this resource </p>
+                <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Done</button> -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+<div class="horScroll">
+    <div class="approvalcol"
+         ng-repeat="column in kanbanBoard.columns"
+         data-columnindex="{{$index}}" id="column{{$index}}" ng-show="hidePage" >
+
+
+        <div>
+            <div class="bg-{{column.name}}">
+                <span class="valign">{{column.name}} </span> 
+                <span class="valign" ng-if="(column.name != 'Pending') && (column.documents.length != 0)"><i ng-click="clearColumn($index)" style="float: right" class="material-icons">clear_all</i>
+                <md-tooltip>Clear all cards from {{column.name}} </md-tooltip>
+                </span>
+            </div>
+            
+        </div>
+
+ 
+        <div class="center">
+            <img src="assets/img/drop.png">
+        </div>
+ 
+
+        <div class="column">
+            <div class="container-fluid columnHeader">
+                <div class="col-sm-5" >
+                    <h5 style="margin: 1px 0 0 0;font-size: 12px;">Time</h5>
+                    <div style="font-size:18px;font-weight :bolder;" class="txtclr-{{column.name}}" ng-show="toggle">
+                    {{count(column).timeSheet +" / " +totalcount(column).timeSheet }}
+                    </div>
+                    <div style="font-size:22px;color :#673AB7;font-weight :bolder;" ng-hide="toggle">--</div>
+                    <!-- <h5 style="margin:0">Total hours</h5> -->
+                    <div style="font-size: 12px;color: #252525;" ng-show="toggle">
+                      {{convertToHHMM(getTotal(column).totalTimeSheetHours)}} Hrs
+                    </div>
+                    <div style="font-size:21px;color :#673AB7;font-weight :bolder;" ng-hide="toggle">--</div>
+                </div> 
+                <div class="col-sm-2">
+                    <hr width="1" size="500">
+                </div>
+                <div class="col-sm-5" >
+                    <h5 style="margin: 1px 0 0 0;font-size: 12px;">Expense</h5>
+                    <div style="font-size:18px;font-weight:bolder;" class="txtclr-{{column.name}}" ng-show="toggle2">
+                    {{count(column).expense +" / " +totalcount(column).expense}}  
+                    </div>
+                    <div style="font-size:22px;color :#E91E63;font-weight :bolder;" ng-hide="toggle2">--</div>
+<!--                     <h5 style="margin:0">Total Amount</h5> -->
+                    <div style="font-size: 12px;color: #252525;" ng-show="toggle2">
+                       ${{getTotal(column).totalExpenseAmount | number:2}}
+                    </div>
+                    <div style="font-size:21px;color :#E91E63;font-weight :bolder;" ng-hide="toggle2">--</div>
+                  
+                </div>
+
+
+            </div>
+            <div>
+             <div>
+            <ul class="cards card-list" as-sortable="kanbanSortOptions" data-ng-model="column.documents">
+                <li class="card" ng-repeat="card in column.documents "  ng-show="([card] | filter:myFilter1 | filter:myFilter2 | filter:myFilter3| filter:myFilter4| filter:myFilter5 | filter:myFilter6 | filter:myFilter7).length" as-sortable-item ng-include="'components/main_comp/approval/views/partials/card.html'">
+                </li>
+            </ul>
+
+             </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+<!-- 
+    <div class="col-sm-12"
+         ng-repeat="column in kanbanBoard.columns"
+         data-columnindex="{{$index}}" id="column{{$index}}" style="max-width: 360px;" ng-hide="preLoader" >
+      <div class="col-sm-4" ng-repeat="(key, value) in column.documents | groupBy: 'projectName'">
+ 
+
+        <div>
+            <div class="bg-{{column.name}}" >
+                          {{key}}
+            </div>
+        </div>
+
+
+        <div class="center">
+            <img src="assets/img/drop.png">
+        </div>
+
+
+        <div class="column">
+
+            <div>
+             <div>
+
+            <ul class="cards card-list" >
+              <li class="card" ng-repeat="card in value" ng-include="'components/main_comp/approval/views/partials/card.html'">
+
+              </li>
+            </ul>
+
+             </div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+</div> -->
+
+
+
+<!-- on process button -->
+
+
+
+
+<md-button ng-disabled="!proBtn" class="md-fab" data-toggle="modal" data-target="#confirm" id="notibtn" style="position:fixed;right: 10px;bottom: 10px;" >
+   <i class="material-icons" style="line-height: 2.7;">subscriptions</i><md-tooltip md-direction="top">Process</md-tooltip>
+</md-button>
+
+<!-- Confirmation -->
+<div class="modal fade" id="confirm" role="dialog" >
+    <div class="modal-dialog"  style="margin: 15% auto;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Approval Confirmation</h4>
+        </div>
+        <div class="container-fluid modal-body" style="padding: 20px;">
+            <div ng-repeat="column in kanbanBoard.columns">
+
+              <div class="col-sm-6" ng-if="column.name=='Approve' && (totalcount(column).timeSheet!=0 || totalcount(column).expense!=0)">
+                  <div style="font-size: 18px;color: white;background: #48b6ab;padding: 8px;text-align: center;">
+                  Marked For Approve
+                  </div> 
+                  <div style="font-size: 18px;font-weight: bolder;color: #009283;border: 1px solid #c1c1c1;padding: 8px;text-align:center;">
+                      <span ng-if="totalcount(column).timeSheet!=0">Timesheet(s): {{totalcount(column).timeSheet}}<br></span>
+                      <span ng-if="totalcount(column).expense!=0">Expense(s): {{totalcount(column).expense}}</span>
+                  </div>
+
+              </div>
+
+              <div class="col-sm-6" ng-if="column.name=='Reject' && (totalcount(column).timeSheet!=0 || totalcount(column).expense!=0)">
+                  <div style="font-size: 18px;color: white;background: #ff8b60;padding: 8px;text-align: center;">
+                  Marked For Reject
+                  </div> 
+                  <div style="font-size: 18px;font-weight: bolder;color: #e25d2c;border: 1px solid #c1c1c1;padding: 8px;text-align:center;">
+                      <span ng-if="totalcount(column).timeSheet!=0">Timesheet(s): {{totalcount(column).timeSheet}} <br></span>
+                      <span ng-if="totalcount(column).expense!=0">Expense(s): {{totalcount(column).expense}}</span>
+                  </div>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <md-button data-dismiss="modal" ng-click="process(kanbanBoard)" style="background: #00796a;color: white;">Process</md-button>
+<!--           <md-button type="button" class="btn btn-default " data-dismiss="modal" style="float: left;">Cancel</md-button> -->
+        </div>
+      </div>
+      
+    </div> 
+  </div> 
+
+
+    <script type="text/ng-template" id="dialog-template.html">
+    <style type="text/css">
+      md-select{
+        min-width:375px;
+        max-width:375px;
+      }
+      md-input-container textarea{
+        width: 100%;
+      }
+    </style>
+      <md-dialog aria-label="options dialog" style="max-width: 400px;min-width: 400px;">
+       <form class="reason-form" name="form" role="form" >
+        <md-dialog-content layout-padding>
+          <h2 class="md-title">Reject Reason</h2>
+
+            <md-input-container>
+              <label>Select any one</label>
+              <md-select required ng-model="selectData" name="reason"  aria-label="rejectReason">
+                  <md-optgroup ng-if="rejectTest.projectId==y.id" ng-repeat='y in data.rejectReasons' value="">
+                      <md-option ng-if="rejectTest.type==x.type" ng-repeat="x in y.rejectReason" value="{{x}}">{{x.rejectReason}}</md-option>
+                  </md-optgroup>
+              </md-select>
+            </md-input-container>
+                      <textarea placeholder="Describe the reason for rejection (optional)" ng-model="rejectedNote" id="rejectedNote" rows="4" cols="50">
+                      </textarea>
+
+        </md-dialog-content>
+        <md-dialog-actions>
+          <span flex></span>
+          <md-button type="submit" ng-disabled="form.$invalid || dataLoading" class="md-raised md-primary" ng-click="sendData(selectData,rejectedNote);reset(selectData);close()">OK</md-button>
+        </md-dialog-actions>
+       </form>
+      </md-dialog>
+    </script>
+   
+<script>
+    $(function () {
+        $('#my-navigation').iptOffCanvas({
+            baseClass: 'offcanvas',
+            type: 'right'
+
+        });
+    });
+
+
+    $(function () {
+        $('.drselect').dropdown();
+    });
+
+
+    $("button").click(function () {
+        $(".drselect").val([]);
+    });
+
+
+</script>
+
+
+
